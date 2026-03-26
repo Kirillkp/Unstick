@@ -11,10 +11,10 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		880B417E2F7533BB0011115D /* Exceptions for "Unstick" folder in "Unstick" target */ = {
+		880B41EB2F7581330011115D /* Exceptions for "Unstick" folder in "Unstick" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Configurations/Info.plist,
 			);
 			target = 880B416B2F7533B90011115D /* Unstick */;
 		};
@@ -24,7 +24,7 @@
 		880B416E2F7533B90011115D /* Unstick */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				880B417E2F7533BB0011115D /* Exceptions for "Unstick" folder in "Unstick" target */,
+				880B41EB2F7581330011115D /* Exceptions for "Unstick" folder in "Unstick" target */,
 			);
 			path = Unstick;
 			sourceTree = "<group>";
@@ -147,7 +147,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8FX35A667X;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Unstick/Info.plist;
+				INFOPLIST_FILE = Unstick/Configurations/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -178,7 +178,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8FX35A667X;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Unstick/Info.plist;
+				INFOPLIST_FILE = Unstick/Configurations/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
