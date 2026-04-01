@@ -10,7 +10,7 @@ import UIKit
 
 struct BlurConfiguration {
     
-    var cornerRadius: CGFloat = 20
+    var cornerRadius: CGFloat = 48
     
     var blurStyle: UIBlurEffect.Style = .systemUltraThinMaterial
     var blurAlpha: CGFloat = 0.1

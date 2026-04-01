@@ -19,7 +19,11 @@ final class OnboardingViewController: UIViewController {
     // MARK: - UI
 
     private let backgroundView = MeshGradientView()
+    private let logo = UIImageView()
+    private let logoTitle = UILabel()
     private let textBackground = BlurBackgroundView()
+    private let titleLabel = UILabel()
+    private let subtitleLabel = UILabel()
 
     // MARK: - Override
 
@@ -52,8 +56,11 @@ extension OnboardingViewController: OnboardingViewProtocol {}
 private extension OnboardingViewController {
     func createUI() {
         setupBackgroundView()
+        setupLogoImage()
+        setupLogoTitle()
         setupTextBackground()
-
+        setupTitleLabel()
+        setupSubtitleLabel()
     }
     
     func setupBackgroundView() {
@@ -63,12 +70,58 @@ private extension OnboardingViewController {
         }
     }
     
-    func setupTextBackground() {
-        view.addSubview(textBackground)
-        textBackground.snp.makeConstraints {
-            $0.center.equalToSuperview()
-            $0.horizontalEdges.equalToSuperview().inset(DS.Spacing.x16)
-            $0.height.equalTo(200)
+    func setupLogoImage() {
+        backgroundView.addSubview(logo)
+        logo.snp.makeConstraints {
+            $0.top.greaterThanOrEqualToSuperview().inset(DS.Spacing.x32)
+            $0.centerX.equalToSuperview()
+            $0.size.equalTo(CGSize(width: 48, height: 48))
         }
+        logo.image = Assets.icon
+    }
+    
+    func setupLogoTitle() {
+        backgroundView.addSubview(logoTitle)
+        logoTitle.snp.makeConstraints {
+            $0.top.equalTo(logo.snp.bottom).offset(DS.Spacing.x8)
+            $0.centerX.equalToSuperview()
+        }
+        logoTitle.text = L10n.Onboarding.logotitle
+        logoTitle.textColor = DS.Colors.textTertiary
+        logoTitle.applyFontStyle(.caption2)
+    }
+    
+    func setupTextBackground() {
+        backgroundView.addSubview(textBackground)
+        textBackground.snp.makeConstraints {
+            $0.top.equalTo(logoTitle.snp.bottom).offset(DS.Spacing.x48)
+            $0.centerY.equalToSuperview().offset(DS.Spacing.x48)
+            $0.horizontalEdges.equalToSuperview().inset(DS.Spacing.x16)
+        }
+    }
+    
+    func setupTitleLabel() {
+        textBackground.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(DS.Spacing.x32)
+            $0.horizontalEdges.equalToSuperview().inset(DS.Spacing.x32)
+        }
+        titleLabel.numberOfLines = 0
+        titleLabel.textColor = DS.Colors.textSecondary
+        titleLabel.text = L10n.Onboarding.title
+        titleLabel.applyFontStyle(.largeTitle)
+    }
+    
+    func setupSubtitleLabel() {
+        textBackground.addSubview(subtitleLabel)
+        subtitleLabel.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(DS.Spacing.x16)
+            $0.horizontalEdges.equalToSuperview().inset(DS.Spacing.x32)
+            $0.bottom.equalToSuperview().inset(DS.Spacing.x32)
+        }
+        subtitleLabel.numberOfLines = 0
+        subtitleLabel.textColor = DS.Colors.textSecondary
+        subtitleLabel.text = L10n.Onboarding.subtitle
+        subtitleLabel.applyFontStyle(.body)
     }
 }

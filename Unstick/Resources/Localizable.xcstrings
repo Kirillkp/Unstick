@@ -1,9 +1,56 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "onboarding.logoTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UNSTICK"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ОТЛИПНИ"
+          }
+        }
+      }
+    },
+    "onboarding.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don’t have to spend hours endlessly scrolling. “Unstick” helps you pause in the moment of impulse and make a conscious choice.\n\nWhen you open a distracting app, we give you a pause — time to think, to say no, or to choose an action that really matters."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ты не обязан тратить часы на бесконечный скролл. “Отлипни” помогает остановиться в момент импульса и сделать осознанный выбор.\n\nКогда ты открываешь отвлекающее приложение, мы даём тебе паузу — время подумать, отказаться или выбрать действие, которое действительно важно."
+          }
+        }
+      }
+    },
     "onboarding.title" : {
-      "comment" : "Возьми контроль над своим вниманием",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Take control of your attention"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Возьми контроль над своим вниманием"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"
