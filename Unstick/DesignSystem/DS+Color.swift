@@ -14,6 +14,11 @@ extension DS {
         static let secondary = UIColor.hex("#1F1D47")
         static let tertiary = UIColor.hex("#C4FF62")
         static let neutral = UIColor.hex("#0F0C29")
+
+        /// button
+        static let buttonPrimaryGradientStart = UIColor.hex("#C49AFF")
+        static let buttonPrimaryGradientEnd = UIColor.hex("#9448F6")
+        static let buttonPrimaryTitle = UIColor.hex("#420082")
         
         /// text
         static let textPrimary = UIColor.hex("#FFFFFF")

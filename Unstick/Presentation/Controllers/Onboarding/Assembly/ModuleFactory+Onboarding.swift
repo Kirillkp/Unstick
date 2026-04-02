@@ -13,6 +13,7 @@ extension ModuleFactory {
         let viewController = OnboardingViewController()
         let presenter = OnboardingPresenter(
             view: viewController,
+            appServices: appServices,
             delegate: delegate
         )
         viewController.presenter = presenter

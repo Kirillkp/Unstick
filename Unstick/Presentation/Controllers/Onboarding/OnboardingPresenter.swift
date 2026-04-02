@@ -8,21 +8,26 @@
 
 import Foundation
 
-protocol OnboardingModuleDelegate: AnyObject {}
+protocol OnboardingModuleDelegate: AnyObject {
+    func onboardingDidFinish()
+}
 
 final class OnboardingPresenter {
     // MARK: - Private Properties
 
     private weak var view: OnboardingViewProtocol?
+    private let appServices: AppServicing
     private weak var delegate: OnboardingModuleDelegate?
 
     // MARK: - Init
 
     init(
         view: OnboardingViewProtocol,
+        appServices: AppServicing,
         delegate: OnboardingModuleDelegate?
     ) {
         self.view = view
+        self.appServices = appServices
         self.delegate = delegate
     }
 }
@@ -37,6 +42,11 @@ extension OnboardingPresenter: OnboardingPresenterProtocol {
     func viewWillAppear(_ animated: Bool) {}
 
     func viewWillDisappear(_ animated: Bool) {}
+
+    func didTapContinue() {
+        appServices.completeOnboarding()
+        delegate?.onboardingDidFinish()
+    }
 
     func bindActions() {}
 }

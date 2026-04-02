@@ -7,4 +7,11 @@
 
 import Foundation
 
-final class ModuleFactory {}
+final class ModuleFactory {
+
+    let appServices: AppServicing
+
+    init(appServices: AppServicing) {
+        self.appServices = appServices
+    }
+}

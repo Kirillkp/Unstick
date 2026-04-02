@@ -14,6 +14,7 @@ protocol OnboardingPresenterProtocol: AnyObject {
     func viewLoaded()
     func viewWillAppear(_ animated: Bool)
     func viewWillDisappear(_ animated: Bool)
+    func didTapContinue()
 }
 
 // PRESENTER -> VIEW

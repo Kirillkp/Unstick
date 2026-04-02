@@ -10,9 +10,8 @@ import UIKit
 
 extension ModuleFactory {
 
-    static func createTabBarModule() -> TabBarController {
+    func createTabBarModule() -> TabBarController {
         let controller = TabBarController()
         return controller
     }
 }
-

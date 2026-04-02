@@ -4,6 +4,11 @@ import Foundation
 
 enum L10n {
 
+    enum Common {
+    static let next = String(localized: "common.Next")
+
+    }
+
     enum Onboarding {
     static let logotitle = String(localized: "onboarding.logoTitle")
 

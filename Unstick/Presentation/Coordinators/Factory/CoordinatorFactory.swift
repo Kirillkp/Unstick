@@ -10,5 +10,10 @@ import Foundation
 typealias CoordinatorGroup<C: Coordinatable> = (coordinator: C, presentable: Presentable)
 
 final class CoordinatorFactory {
-    let moduleFactory = ModuleFactory()
+
+    let moduleFactory: ModuleFactory
+
+    init(moduleFactory: ModuleFactory) {
+        self.moduleFactory = moduleFactory
+    }
 }

@@ -24,6 +24,7 @@ final class OnboardingViewController: UIViewController {
     private let textBackground = BlurBackgroundView()
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
+    private let continueButton = DSButton()
 
     // MARK: - Override
 
@@ -61,6 +62,7 @@ private extension OnboardingViewController {
         setupTextBackground()
         setupTitleLabel()
         setupSubtitleLabel()
+        setupContinueButton()
     }
     
     func setupBackgroundView() {
@@ -96,7 +98,7 @@ private extension OnboardingViewController {
         textBackground.snp.makeConstraints {
             $0.top.equalTo(logoTitle.snp.bottom).offset(DS.Spacing.x48)
             $0.centerY.equalToSuperview().offset(DS.Spacing.x48)
-            $0.horizontalEdges.equalToSuperview().inset(DS.Spacing.x16)
+            $0.horizontalEdges.equalToSuperview().inset(DS.Spacing.x24)
         }
     }
     
@@ -117,11 +119,31 @@ private extension OnboardingViewController {
         subtitleLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(DS.Spacing.x16)
             $0.horizontalEdges.equalToSuperview().inset(DS.Spacing.x32)
-            $0.bottom.equalToSuperview().inset(DS.Spacing.x32)
         }
         subtitleLabel.numberOfLines = 0
         subtitleLabel.textColor = DS.Colors.textSecondary
         subtitleLabel.text = L10n.Onboarding.subtitle
         subtitleLabel.applyFontStyle(.body)
+    }
+
+    func setupContinueButton() {
+        textBackground.addSubview(continueButton)
+        continueButton.snp.makeConstraints {
+            $0.top.equalTo(subtitleLabel.snp.bottom).offset(DS.Spacing.x24)
+            $0.horizontalEdges.equalToSuperview().inset(DS.Spacing.x32)
+            $0.bottom.equalToSuperview().inset(DS.Spacing.x32)
+        }
+        continueButton.setStyle(.primary, size: .m)
+        continueButton.setTitle(L10n.Common.next, for: .normal)
+        continueButton.addTarget(
+            self,
+            action: #selector(continueButtonTapped),
+            for: .touchUpInside
+        )
+    }
+
+    @objc
+    func continueButtonTapped() {
+        presenter?.didTapContinue()
     }
 }

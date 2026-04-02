@@ -10,7 +10,6 @@ import UIKit
 
 final class TabBarCoordinator: BaseCoordinator {
     
-    private let router: Routable
     private let coordinatorFactory: CoordinatorFactory
     private var tabBarController: TabBarController?
     
@@ -18,12 +17,9 @@ final class TabBarCoordinator: BaseCoordinator {
     private var settingsCoordinator: SettingsCoordinator?
     
     init(
-        router: Routable,
-        coordinatorFactory: CoordinatorFactory = .init(),
+        coordinatorFactory: CoordinatorFactory,
         tabBarController: TabBarController
     ) {
-        
-        self.router = router
         self.coordinatorFactory = coordinatorFactory
         self.tabBarController = tabBarController
     }
