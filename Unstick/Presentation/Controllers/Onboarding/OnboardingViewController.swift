@@ -10,6 +10,10 @@ import UIKit
 import SnapKit
 
 final class OnboardingViewController: UIViewController {
+    private enum Layout {
+        static let iconSize: CGSize = CGSize(width: 48, height: 48)
+    }
+    
     // MARK: - Public Properties
 
     var presenter: OnboardingPresenterProtocol?
@@ -77,7 +81,7 @@ private extension OnboardingViewController {
         logo.snp.makeConstraints {
             $0.top.greaterThanOrEqualToSuperview().inset(DS.Spacing.x32)
             $0.centerX.equalToSuperview()
-            $0.size.equalTo(CGSize(width: 48, height: 48))
+            $0.size.equalTo(Layout.iconSize)
         }
         logo.image = Assets.icon
     }
@@ -88,7 +92,7 @@ private extension OnboardingViewController {
             $0.top.equalTo(logo.snp.bottom).offset(DS.Spacing.x8)
             $0.centerX.equalToSuperview()
         }
-        logoTitle.text = L10n.Onboarding.logotitle
+        logoTitle.text = L10n.Onboarding.logoTitle
         logoTitle.textColor = DS.Colors.textTertiary
         logoTitle.applyFontStyle(.caption2)
     }

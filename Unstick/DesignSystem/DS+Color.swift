@@ -19,6 +19,12 @@ extension DS {
         static let buttonPrimaryGradientStart = UIColor.hex("#C49AFF")
         static let buttonPrimaryGradientEnd = UIColor.hex("#9448F6")
         static let buttonPrimaryTitle = UIColor.hex("#420082")
+
+        /// indicator
+        static let indicatorRingBackground = UIColor.hex("#24204A").withAlphaComponent(0.6)
+        static let indicatorRingGlow = UIColor.hex("#C49AFF").withAlphaComponent(0.3)
+        static let indicatorFillBorder = UIColor.hex("#B06CFF")
+        static let indicatorStatusPositive = UIColor.hex("#B2EC51")
         
         /// text
         static let textPrimary = UIColor.hex("#FFFFFF")

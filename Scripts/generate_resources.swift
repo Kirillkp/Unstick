@@ -10,11 +10,15 @@ import Foundation
 
 // MARK: - CONFIG
 
-let projectRoot = FileManager.default.currentDirectoryPath
+let scriptURL = URL(fileURLWithPath: #filePath)
+let projectRoot = scriptURL
+    .deletingLastPathComponent()
+    .deletingLastPathComponent()
+    .path
 
-let inputStringsPath = "\(projectRoot)/Unstick/Unstick/Resources/Localizable.xcstrings"
-let inputAssetsPath  = "\(projectRoot)/Unstick/Unstick/Resources/Assets.xcassets"
-let outputDir        = "\(projectRoot)/Unstick/Unstick/Generated"
+let inputStringsPath = "\(projectRoot)/Unstick/Resources/Localizable.xcstrings"
+let inputAssetsPath  = "\(projectRoot)/Unstick/Resources/Assets.xcassets"
+let outputDir        = "\(projectRoot)/Unstick/Generated"
 let outputL10n       = "\(outputDir)/L10n.swift"
 let outputAssets     = "\(outputDir)/Assets.swift"
 
@@ -36,6 +40,11 @@ struct StringUnit: Codable {
     let value: String
 }
 
+final class L10nNode {
+    var children: [String: L10nNode] = [:]
+    var entries: [(key: String, value: String, name: String)] = []
+}
+
 // MARK: - HELPERS
 
 func argumentsCount(in string: String) -> Int {
@@ -43,6 +52,10 @@ func argumentsCount(in string: String) -> Int {
 }
 
 func camelCase(_ string: String) -> String {
+    guard string.contains("_") else {
+        return string.prefix(1).lowercased() + string.dropFirst()
+    }
+
     let parts = string.split(separator: "_")
     return parts.enumerated().map {
         $0 == 0 ? $1.lowercased() : $1.capitalized
@@ -53,25 +66,71 @@ func pascalCase(_ string: String) -> String {
     string.prefix(1).uppercased() + string.dropFirst()
 }
 
+func indent(_ level: Int) -> String {
+    String(repeating: "    ", count: level)
+}
+
+func render(node: L10nNode, level: Int) -> String {
+    var result = ""
+
+    for childKey in node.children.keys.sorted() {
+        guard let childNode = node.children[childKey] else { continue }
+        result += "\n\(indent(level))enum \(pascalCase(childKey)) {"
+        result += render(node: childNode, level: level + 1)
+        result += "\n\(indent(level))}\n"
+    }
+
+    for entry in node.entries.sorted(by: { $0.key < $1.key }) {
+        let argsCount = argumentsCount(in: entry.value)
+
+        if argsCount == 0 {
+            result += """
+
+\(indent(level))    static let \(entry.name) = String(localized: "\(entry.key)")
+
+"""
+        } else {
+            let params = (0..<argsCount).map { "arg\($0): CVarArg" }.joined(separator: ", ")
+            let args = (0..<argsCount).map { "arg\($0)" }.joined(separator: ", ")
+            result += """
+
+\(indent(level))    static func \(entry.name)(\(params)) -> String {
+\(indent(level))        String(format: String(localized: "\(entry.key)"), \(args))
+\(indent(level))    }
+
+"""
+        }
+    }
+
+    return result
+}
+
 // MARK: - L10N GENERATION
 
 func generateL10n() throws {
     let data = try Data(contentsOf: URL(fileURLWithPath: inputStringsPath))
     let decoded = try JSONDecoder().decode(XCStrings.self, from: data)
 
-    // Сгруппируем ключи по namespace
-    var groups: [String: [(key: String, value: String)]] = [:]
+    let root = L10nNode()
 
     for (key, entry) in decoded.strings {
         guard let value = entry.localizations?.first?.value.stringUnit?.value else { continue }
         let parts = key.split(separator: ".")
-        guard parts.count == 2 else { continue }
-        let group = String(parts[0]).capitalized
-        let name = String(parts[1])
-        groups[group, default: []].append((key: key, value: value))
+        guard parts.count >= 2 else { continue }
+
+        var currentNode = root
+        for namespace in parts.dropLast() {
+            let key = pascalCase(String(namespace))
+            if currentNode.children[key] == nil {
+                currentNode.children[key] = L10nNode()
+            }
+            currentNode = currentNode.children[key]!
+        }
+
+        let leafName = camelCase(String(parts.last!))
+        currentNode.entries.append((key: key, value: value, name: leafName))
     }
 
-    // Генерируем enum
     var result = """
     // AUTO-GENERATED FILE. DO NOT EDIT.
 
@@ -81,35 +140,7 @@ func generateL10n() throws {
 
     """
 
-    for (group, entries) in groups.sorted(by: { $0.key < $1.key }) {
-        result += "\n    enum \(group) {"
-
-        for entry in entries.sorted(by: { $0.key < $1.key }) {
-            let parts = entry.key.split(separator: ".")
-            let name = camelCase(String(parts[1]))
-            let argsCount = argumentsCount(in: entry.value)
-
-            if argsCount == 0 {
-                result += """
-                
-                    static let \(name) = String(localized: "\(entry.key)")
-                
-                """
-            } else {
-                let params = (0..<argsCount).map { "arg\($0): CVarArg" }.joined(separator: ", ")
-                let args = (0..<argsCount).map { "arg\($0)" }.joined(separator: ", ")
-                result += """
-                
-                    static func \(name)(\(params)) -> String {
-                        String(format: String(localized: "\(entry.key)"), \(args))
-                    }
-                
-                """
-            }
-        }
-
-        result += "\n    }\n"
-    }
+    result += render(node: root, level: 1)
 
     result += "}"
 
@@ -126,8 +157,6 @@ func generateL10n() throws {
 // MARK: - ASSETS GENERATION
 
 func generateAssets() throws {
-    let fm = FileManager.default
-
     var result = """
     // AUTO-GENERATED FILE. DO NOT EDIT.
 
@@ -137,23 +166,27 @@ func generateAssets() throws {
 
     """
 
-    let items = try fm.contentsOfDirectory(atPath: inputAssetsPath)
+    let assetEntries = try assetEntriesRecursively(in: inputAssetsPath)
+    var usedPropertyNames = Set<String>()
 
-    for item in items {
-        let itemPath = "\(inputAssetsPath)/\(item)"
+    for entry in assetEntries {
+        let basePropertyName = camelCase(entry.assetName)
+        let propertyName: String
 
-        var isDir: ObjCBool = false
-        guard fm.fileExists(atPath: itemPath, isDirectory: &isDir), isDir.boolValue else { continue }
+        if usedPropertyNames.insert(basePropertyName).inserted {
+            propertyName = basePropertyName
+        } else {
+            let fallbackPropertyName = camelCase(entry.relativePathKey)
+            usedPropertyNames.insert(fallbackPropertyName)
+            propertyName = fallbackPropertyName
+        }
 
-        if item.hasSuffix(".imageset") {
-            let name = cleanAssetName(item)
-            let propertyName = camelCase(name)
-            result += "\n    static let \(propertyName) = UIImage(named: \"\(name)\")!"
-        } else if item.hasSuffix(".colorset") {
-            let name = cleanAssetName(item)
-            let propertyName = camelCase(name)
-            result += "\n    static let \(propertyName) = UIColor(named: \"\(name)\")!"
-        } else if item.hasSuffix(".appiconset") {
+        switch entry.kind {
+        case .image:
+            result += "\n    static let \(propertyName) = UIImage(named: \"\(entry.assetName)\")!"
+        case .color:
+            result += "\n    static let \(propertyName) = UIColor(named: \"\(entry.assetName)\")!"
+        case .appIcon:
             continue
         }
     }
@@ -170,6 +203,72 @@ func cleanAssetName(_ name: String) -> String {
         .replacingOccurrences(of: ".imageset", with: "")
         .replacingOccurrences(of: ".appiconset", with: "")
         .replacingOccurrences(of: ".colorset", with: "")
+}
+
+enum AssetKind {
+    case image
+    case color
+    case appIcon
+}
+
+struct AssetEntry {
+    let kind: AssetKind
+    let assetName: String
+    let relativePathKey: String
+}
+
+func assetEntriesRecursively(in assetsPath: String) throws -> [AssetEntry] {
+    let fm = FileManager.default
+    guard let enumerator = fm.enumerator(atPath: assetsPath) else {
+        return []
+    }
+
+    var entries: [AssetEntry] = []
+
+    for case let relativePath as String in enumerator {
+        let fullPath = "\(assetsPath)/\(relativePath)"
+
+        var isDirectory: ObjCBool = false
+        guard fm.fileExists(atPath: fullPath, isDirectory: &isDirectory), isDirectory.boolValue else {
+            continue
+        }
+
+        if relativePath.hasSuffix(".imageset") {
+            let assetName = cleanAssetName((relativePath as NSString).lastPathComponent)
+            let relativeKey = assetRelativeKey(relativePath)
+            entries.append(
+                AssetEntry(
+                    kind: .image,
+                    assetName: assetName,
+                    relativePathKey: relativeKey
+                )
+            )
+            enumerator.skipDescendants()
+        } else if relativePath.hasSuffix(".colorset") {
+            let assetName = cleanAssetName((relativePath as NSString).lastPathComponent)
+            let relativeKey = assetRelativeKey(relativePath)
+            entries.append(
+                AssetEntry(
+                    kind: .color,
+                    assetName: assetName,
+                    relativePathKey: relativeKey
+                )
+            )
+            enumerator.skipDescendants()
+        } else if relativePath.hasSuffix(".appiconset") {
+            enumerator.skipDescendants()
+        }
+    }
+
+    return entries.sorted { $0.relativePathKey < $1.relativePathKey }
+}
+
+func assetRelativeKey(_ relativePath: String) -> String {
+    relativePath
+        .replacingOccurrences(of: ".imageset", with: "")
+        .replacingOccurrences(of: ".appiconset", with: "")
+        .replacingOccurrences(of: ".colorset", with: "")
+        .replacingOccurrences(of: "/", with: "_")
 }
 
 // MARK: - RUN

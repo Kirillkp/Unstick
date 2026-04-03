@@ -8,20 +8,14 @@
 
 import UIKit
 import SnapKit
-import FamilyControls
-
-final class ScreenTimeAuthorizationService {
-
-    func requestAccess() async throws {
-        try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
-    }
-
-    func authorizationStatus() -> AuthorizationStatus {
-        AuthorizationCenter.shared.authorizationStatus
-    }
-}
 
 final class MainViewController: UIViewController {
+    // MARK: Layout
+    
+    private enum Layout {
+        static let indicatorSize: CGSize = CGSize(width: 256, height: 256)
+    }
+    
     // MARK: - Public Properties
 
     var presenter: MainPresenterProtocol?
@@ -31,7 +25,7 @@ final class MainViewController: UIViewController {
     // MARK: - UI
 
     private let backgroundView = MeshGradientView()
-    private let startButton = UIButton()
+    private let indicatorView = IndicatorView()
 
     // MARK: - Override
 
@@ -63,9 +57,8 @@ extension MainViewController: MainViewProtocol {}
 
 private extension MainViewController {
     func createUI() {
-        title = "Главная"
         setupBackgroundView()
-        setupStartButton()
+        setupIndicatorView()
     }
     
     func setupBackgroundView() {
@@ -75,22 +68,12 @@ private extension MainViewController {
         }
     }
     
-    func setupStartButton() {
-        view.addSubview(startButton)
-        startButton.snp.makeConstraints {
+    func setupIndicatorView() {
+        view.addSubview(indicatorView)
+        indicatorView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.size.equalTo(CGSize(width: 200, height: 50))
+            $0.size.equalTo(Layout.indicatorSize)
         }
-        startButton.backgroundColor = .red
-        startButton.setTitle("Начать", for: .normal)
-        startButton.addTarget(
-            self,
-            action: #selector(startButtonTapped),
-            for: .touchUpInside
-        )
-    }
-    
-    @objc func startButtonTapped() {
-        presenter?.nextAction()
+        indicatorView.setState(.empty(IndicatorView.EmptyContent()))
     }
 }
