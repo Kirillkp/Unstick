@@ -22,6 +22,7 @@ extension DS {
         public static let x20: CGFloat = 20
         public static let x24: CGFloat = 24
         public static let x32: CGFloat = 32
+        public static let x40: CGFloat = 40
         public static let x48: CGFloat = 48
         public static let x64: CGFloat = 64
     }

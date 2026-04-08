@@ -26,6 +26,34 @@ enum L10n {
 
     }
 
+    enum Main {
+        enum Action {
+                static let newGroup = String(localized: "main.action.newGroup")
+
+        }
+
+        enum Empty {
+                static let actionTitle = String(localized: "main.empty.actionTitle")
+
+                static let note = String(localized: "main.empty.note")
+
+                static let subtitle = String(localized: "main.empty.subtitle")
+
+                static let title = String(localized: "main.empty.title")
+
+        }
+
+        enum Groups {
+                static func activeCount(arg0: CVarArg) -> String {
+                    String(format: String(localized: "main.groups.activeCount"), arg0)
+                }
+
+                static let title = String(localized: "main.groups.title")
+
+        }
+
+    }
+
     enum Onboarding {
             static let logoTitle = String(localized: "onboarding.logoTitle")
 

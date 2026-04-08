@@ -139,7 +139,7 @@ private extension IndicatorView {
             $0.size.equalTo(Layout.ringSize)
         }
         glowView.backgroundColor = .clear
-        glowView.layer.shadowColor = DS.Colors.indicatorRingGlow.cgColor
+        glowView.layer.shadowColor = DS.Colors.buttonPrimaryGradientStart.withAlphaComponent(0.3).cgColor
         glowView.layer.shadowOpacity = 1
         glowView.layer.shadowRadius = DS.CornerRadius.x40
         glowView.layer.shadowOffset = .zero
@@ -152,7 +152,7 @@ private extension IndicatorView {
             $0.size.equalTo(Layout.ringSize)
         }
         ringContainerView.layer.borderColor = DS.Colors.indicatorFillBorder.cgColor
-        ringContainerView.backgroundColor = DS.Colors.indicatorRingBackground
+        ringContainerView.backgroundColor = DS.Colors.surfacePrimary.withAlphaComponent(0.6)
         ringContainerView.layer.borderWidth = DS.Spacing.x8
         ringContainerView.clipsToBounds = true
     }
