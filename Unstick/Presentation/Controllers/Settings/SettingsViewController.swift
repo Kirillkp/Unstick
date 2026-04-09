@@ -46,7 +46,5 @@ extension SettingsViewController: SettingsViewProtocol {}
 // MARK: - Create UI
 
 private extension SettingsViewController {
-    func createUI() {
-        title = "Настройки"
-    }
+    func createUI() {}
 }

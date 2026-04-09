@@ -62,4 +62,39 @@ enum L10n {
             static let title = String(localized: "onboarding.title")
 
     }
+
+    enum Statistics {
+        enum Activity {
+                static let fri = String(localized: "statistics.activity.fri")
+
+                static let mon = String(localized: "statistics.activity.mon")
+
+                static let sat = String(localized: "statistics.activity.sat")
+
+                static let subtitle = String(localized: "statistics.activity.subtitle")
+
+                static let sun = String(localized: "statistics.activity.sun")
+
+                static let thu = String(localized: "statistics.activity.thu")
+
+                static let title = String(localized: "statistics.activity.title")
+
+                static let tue = String(localized: "statistics.activity.tue")
+
+                static let wed = String(localized: "statistics.activity.wed")
+
+        }
+
+        enum Metrics {
+                static let canceledTitle = String(localized: "statistics.metrics.canceledTitle")
+
+                static let focusScoreTitle = String(localized: "statistics.metrics.focusScoreTitle")
+
+                static let savedTitle = String(localized: "statistics.metrics.savedTitle")
+
+                static let streakTitle = String(localized: "statistics.metrics.streakTitle")
+
+        }
+
+    }
 }

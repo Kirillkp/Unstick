@@ -14,6 +14,7 @@ final class TabBarCoordinator: BaseCoordinator {
     private var tabBarController: TabBarController?
     
     private var mainCoordinator: MainCoordinator?
+    private var statisticsCoordinator: StatisticsCoordinator?
     private var settingsCoordinator: SettingsCoordinator?
     
     init(
@@ -48,6 +49,12 @@ final class TabBarCoordinator: BaseCoordinator {
             (coordinator, presentable) = (mainCoordinator, mainPresentable)
             
             self.mainCoordinator = mainCoordinator
+        case .statistics:
+            let (statisticsCoordinator, statisticsPresentable) = coordinatorFactory.makeStatisticsCoordinator()
+
+            (coordinator, presentable) = (statisticsCoordinator, statisticsPresentable)
+
+            self.statisticsCoordinator = statisticsCoordinator
         case .settings:
             let (settingsCoordinator, settingsPresentable) = coordinatorFactory.makeSettingsCoordinator()
             

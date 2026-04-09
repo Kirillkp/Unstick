@@ -104,10 +104,7 @@ private extension MainViewController {
     }
 
     func setupBackgroundView() {
-        view.addSubview(backgroundView)
-        backgroundView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
+        view.backgroundColor = DS.Colors.neutral
     }
 
     func setupScrollView() {
