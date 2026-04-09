@@ -3,23 +3,26 @@
 //  Unstick
 //
 //  Created by Полосов Кирилл Павлович on 27.03.2026
-//  
+//
 //
 
-import Foundation
-
-// VIEW -> PRESENTER
+import UIKit
 
 protocol SettingsPresenterProtocol: AnyObject {
     func viewLoaded()
     func viewWillAppear(_ animated: Bool)
+    func viewDidAppear(_ animated: Bool)
     func viewWillDisappear(_ animated: Bool)
 }
 
-// PRESENTER -> VIEW
+protocol SettingsFactoryProtocol: AnyObject {
+    func makeFilledState() -> SettingsViewState.Filled
+    func makeCollectionContent(for state: SettingsViewState.Filled) -> [AnyCollectionSection]
+}
 
-protocol SettingsViewProtocol: AnyObject {}
+protocol SettingsViewProtocol: AnyObject {
+    var _collectionView: UICollectionView { get }
 
-// PRESENTER -> INTERACTOR
-
-protocol SettingsInteractorProtocol: AnyObject {}
+    func display(state: SettingsViewState)
+    func refreshCollectionLayout()
+}

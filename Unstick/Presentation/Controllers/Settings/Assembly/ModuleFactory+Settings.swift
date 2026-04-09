@@ -11,8 +11,10 @@ import UIKit
 extension ModuleFactory {
     func createSettings(delegate: SettingsModuleDelegate?) -> SettingsViewController {
         let viewController = SettingsViewController()
+        let factory = SettingsFactory()
         let presenter = SettingsPresenter(
             view: viewController,
+            factory: factory,
             delegate: delegate
         )
         viewController.presenter = presenter

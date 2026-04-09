@@ -63,6 +63,74 @@ enum L10n {
 
     }
 
+    enum Settings {
+        enum About {
+                static let privacyPolicy = String(localized: "settings.about.privacyPolicy")
+
+                static let rateInAppStore = String(localized: "settings.about.rateInAppStore")
+
+                static let termsOfUse = String(localized: "settings.about.termsOfUse")
+
+                static let title = String(localized: "settings.about.title")
+
+                static let version = String(localized: "settings.about.version")
+
+                static let versionValue = String(localized: "settings.about.versionValue")
+
+                static let whatsNew = String(localized: "settings.about.whatsNew")
+
+        }
+
+        enum General {
+                static let deferredResume = String(localized: "settings.general.deferredResume")
+
+                static let deferredResumeValue = String(localized: "settings.general.deferredResumeValue")
+
+                static let notifications = String(localized: "settings.general.notifications")
+
+                static let strictMode = String(localized: "settings.general.strictMode")
+
+                static let title = String(localized: "settings.general.title")
+
+        }
+
+        enum Personalization {
+                static let appearance = String(localized: "settings.personalization.appearance")
+
+                static let hapticsAndSound = String(localized: "settings.personalization.hapticsAndSound")
+
+                static let interventionTone = String(localized: "settings.personalization.interventionTone")
+
+                static let title = String(localized: "settings.personalization.title")
+
+        }
+
+        enum Protection {
+                static let disableProtection = String(localized: "settings.protection.disableProtection")
+
+                static let passcode = String(localized: "settings.protection.passcode")
+
+                static let passcodeValue = String(localized: "settings.protection.passcodeValue")
+
+                static let title = String(localized: "settings.protection.title")
+
+        }
+
+        enum Support {
+                static let faq = String(localized: "settings.support.faq")
+
+                static let feedback = String(localized: "settings.support.feedback")
+
+                static let introduction = String(localized: "settings.support.introduction")
+
+                static let title = String(localized: "settings.support.title")
+
+        }
+
+            static let title = String(localized: "settings.title")
+
+    }
+
     enum Statistics {
         enum Activity {
                 static let fri = String(localized: "statistics.activity.fri")
