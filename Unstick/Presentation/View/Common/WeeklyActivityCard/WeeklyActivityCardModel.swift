@@ -1,13 +1,14 @@
 //
-//  StatisticsWeeklyActivityModel.swift
+//  WeeklyActivityCardModel.swift
 //  Unstick
 //
-//  Created by Codex on 09.04.2026.
+//  Created by Codex on 10.04.2026.
 //
 
 import Foundation
+import UIKit
 
-nonisolated struct StatisticsWeeklyActivityModel: BaseCellViewModel {
+nonisolated struct WeeklyActivityCardModel: BaseCellViewModel {
     nonisolated struct DayActivity: Hashable, Sendable {
         enum Style: Hashable, Sendable {
             case primary
@@ -51,12 +52,12 @@ nonisolated struct StatisticsWeeklyActivityModel: BaseCellViewModel {
     }
 
     var registration: CollectionReusableRegistration {
-        .cell(AnyCollectionCell<StatisticsWeeklyActivityCardView>.self)
+        .cell(AnyCollectionCell<WeeklyActivityCardView>.self)
     }
 
     nonisolated static func == (
-        lhs: StatisticsWeeklyActivityModel,
-        rhs: StatisticsWeeklyActivityModel
+        lhs: WeeklyActivityCardModel,
+        rhs: WeeklyActivityCardModel
     ) -> Bool {
         lhs.id == rhs.id
     }

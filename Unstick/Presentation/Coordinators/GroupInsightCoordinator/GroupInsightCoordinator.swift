@@ -1,0 +1,34 @@
+//
+//  GroupInsightCoordinator.swift
+//  Unstick
+//
+//  Created by Codex on 10.04.2026.
+//
+
+import Foundation
+import UIKit
+
+final class GroupInsightCoordinator: BaseCoordinator {
+    private let router: Routable
+    private let moduleFactory: ModuleFactory
+
+    init(
+        router: Routable,
+        moduleFactory: ModuleFactory
+    ) {
+        self.router = router
+        self.moduleFactory = moduleFactory
+    }
+
+    override func start() {
+        showGroupInsight()
+    }
+
+    private func showGroupInsight() {
+        let module = moduleFactory.createGroupInsight(delegate: self)
+        module.hidesBottomBarWhenPushed = true
+        router.push(module, animated: true)
+    }
+}
+
+extension GroupInsightCoordinator: GroupInsightModuleDelegate {}

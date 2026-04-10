@@ -50,8 +50,10 @@ private extension StatisticsPresenter {
             hero: .init(
                 badge: StatisticsMockData.Hero.badge,
                 title: StatisticsMockData.Hero.title,
-                highlightedHours: StatisticsMockData.Hero.highlightedHours,
-                highlightedMinutes: StatisticsMockData.Hero.highlightedMinutes,
+                highlightedTexts: [
+                    StatisticsMockData.Hero.highlightedHours,
+                    StatisticsMockData.Hero.highlightedMinutes
+                ],
                 subtitle: StatisticsMockData.Hero.subtitle
             ),
             metrics: [

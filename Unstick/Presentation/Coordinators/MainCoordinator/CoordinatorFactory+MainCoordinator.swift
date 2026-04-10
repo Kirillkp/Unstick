@@ -13,7 +13,8 @@ extension CoordinatorFactory {
         let router = Router(rootController: navigation)
         let coordinator = MainCoordinator(
             router: router,
-            moduleFactory: moduleFactory
+            moduleFactory: moduleFactory,
+            coordinatorFactory: self
         )
         return (coordinator, navigation)
     }

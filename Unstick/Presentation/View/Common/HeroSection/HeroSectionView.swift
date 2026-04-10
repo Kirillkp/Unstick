@@ -1,14 +1,14 @@
 //
-//  StatisticsHeroView.swift
+//  HeroSectionView.swift
 //  Unstick
 //
-//  Created by Codex on 08.04.2026.
+//  Created by Codex on 10.04.2026.
 //
 
 import UIKit
 import SnapKit
 
-final class StatisticsHeroView: UIView {
+final class HeroSectionView: UIView {
     private enum Layout {
         static let titleLineHeight: CGFloat = 48
         static let subtitleLineHeight: CGFloat = 18
@@ -30,24 +30,23 @@ final class StatisticsHeroView: UIView {
     }
 }
 
-extension StatisticsHeroView: ConfigurableView {
+extension HeroSectionView: ConfigurableView {
     func configure(with model: any BaseCellViewModel) {
-        guard let model = model as? StatisticsHeroModel else { return }
+        guard let model = model as? HeroSectionModel else { return }
 
+        badgeLabel.isHidden = model.badge?.isEmpty != false
         badgeLabel.text = model.badge
         badgeLabel.applyFontStyle(.caption2)
 
         titleLabel.attributedText = makeTitleText(
             title: model.title,
-            highlightedHours: model.highlightedHours,
-            highlightedMinutes: model.highlightedMinutes
+            highlightedTexts: model.highlightedTexts
         )
-
         subtitleLabel.attributedText = makeSubtitleText(model.subtitle)
     }
 }
 
-private extension StatisticsHeroView {
+private extension HeroSectionView {
     func createUI() {
         setupContentStackView()
         setupBadgeLabel()
@@ -84,8 +83,7 @@ private extension StatisticsHeroView {
 
     func makeTitleText(
         title: String,
-        highlightedHours: String,
-        highlightedMinutes: String
+        highlightedTexts: [String]
     ) -> NSAttributedString {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.minimumLineHeight = Layout.titleLineHeight
@@ -102,9 +100,8 @@ private extension StatisticsHeroView {
         )
 
         let fullText = result.string as NSString
-        let highlightedParts = [highlightedHours, highlightedMinutes]
 
-        highlightedParts.forEach { highlightedText in
+        highlightedTexts.forEach { highlightedText in
             let range = fullText.range(of: highlightedText)
             guard range.location != NSNotFound else { return }
 

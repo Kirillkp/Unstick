@@ -1,43 +1,40 @@
 //
-//  StatisticsHeroModel.swift
+//  HeroSectionModel.swift
 //  Unstick
 //
-//  Created by Codex on 08.04.2026.
+//  Created by Codex on 10.04.2026.
 //
 
 import Foundation
 
-nonisolated struct StatisticsHeroModel: BaseCellViewModel {
+nonisolated struct HeroSectionModel: BaseCellViewModel, Sendable {
     let id: UUID
-    let badge: String
+    let badge: String?
     let title: String
-    let highlightedHours: String
-    let highlightedMinutes: String
+    let highlightedTexts: [String]
     let subtitle: String
 
     init(
         id: UUID = UUID(),
-        badge: String,
+        badge: String? = nil,
         title: String,
-        highlightedHours: String,
-        highlightedMinutes: String,
+        highlightedTexts: [String] = [],
         subtitle: String
     ) {
         self.id = id
         self.badge = badge
         self.title = title
-        self.highlightedHours = highlightedHours
-        self.highlightedMinutes = highlightedMinutes
+        self.highlightedTexts = highlightedTexts
         self.subtitle = subtitle
     }
 
     var registration: CollectionReusableRegistration {
-        .cell(AnyCollectionCell<StatisticsHeroView>.self)
+        .cell(AnyCollectionCell<HeroSectionView>.self)
     }
 
     nonisolated static func == (
-        lhs: StatisticsHeroModel,
-        rhs: StatisticsHeroModel
+        lhs: HeroSectionModel,
+        rhs: HeroSectionModel
     ) -> Bool {
         lhs.id == rhs.id
     }

@@ -1,18 +1,18 @@
 //
-//  StatisticsWeeklyActivityCardView.swift
+//  WeeklyActivityCardView.swift
 //  Unstick
 //
-//  Created by Codex on 09.04.2026.
+//  Created by Codex on 10.04.2026.
 //
 
 import UIKit
 import SnapKit
 
-final class StatisticsWeeklyActivityCardView: UIView {
+final class WeeklyActivityCardView: UIView {
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
     private let selectedValueLabel = UILabel()
-    private let chartView = StatisticsWeeklyActivityChartView()
+    private let chartView = WeeklyActivityChartView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,9 +25,9 @@ final class StatisticsWeeklyActivityCardView: UIView {
     }
 }
 
-extension StatisticsWeeklyActivityCardView: ConfigurableView {
+extension WeeklyActivityCardView: ConfigurableView {
     func configure(with model: any BaseCellViewModel) {
-        guard let model = model as? StatisticsWeeklyActivityModel else { return }
+        guard let model = model as? WeeklyActivityCardModel else { return }
 
         titleLabel.text = model.title
         subtitleLabel.text = model.subtitle
@@ -39,7 +39,7 @@ extension StatisticsWeeklyActivityCardView: ConfigurableView {
     }
 }
 
-private extension StatisticsWeeklyActivityCardView {
+private extension WeeklyActivityCardView {
     func createUI() {
         setupSelf()
         setupTitleLabel()
@@ -99,20 +99,17 @@ private extension StatisticsWeeklyActivityCardView {
     }
 }
 
-private final class StatisticsWeeklyActivityChartView: UIView {
+private final class WeeklyActivityChartView: UIView {
     private enum Layout {
         static let chartHeight: CGFloat = 116
-        static let barWidth: CGFloat = 16
-        static let minimumBarHeight: CGFloat = 16
-        static let barCornerRadius: CGFloat = 8
     }
 
-    var onSelectionChanged: ((StatisticsWeeklyActivityModel.DayActivity) -> Void)?
+    var onSelectionChanged: ((WeeklyActivityCardModel.DayActivity) -> Void)?
 
     private let guidesView = UIView()
     private let daysStackView = UIStackView()
-    private var dayViews: [DayColumnView] = []
-    private var items: [StatisticsWeeklyActivityModel.DayActivity] = []
+    private var dayViews: [WeeklyDayColumnView] = []
+    private var items: [WeeklyActivityCardModel.DayActivity] = []
     private var selectedIndex: Int = 0
 
     override init(frame: CGRect) {
@@ -126,7 +123,7 @@ private final class StatisticsWeeklyActivityChartView: UIView {
     }
 
     @MainActor
-    func configure(items: [StatisticsWeeklyActivityModel.DayActivity]) {
+    func configure(items: [WeeklyActivityCardModel.DayActivity]) {
         self.items = items
         selectedIndex = min(selectedIndex, max(items.count - 1, 0))
         rebuildDayViews(with: items)
@@ -134,7 +131,7 @@ private final class StatisticsWeeklyActivityChartView: UIView {
     }
 }
 
-private extension StatisticsWeeklyActivityChartView {
+private extension WeeklyActivityChartView {
     func createUI() {
         setupGuidesView()
         setupDaysStackView()
@@ -177,13 +174,13 @@ private extension StatisticsWeeklyActivityChartView {
     }
 
     @MainActor
-    func rebuildDayViews(with items: [StatisticsWeeklyActivityModel.DayActivity]) {
+    func rebuildDayViews(with items: [WeeklyActivityCardModel.DayActivity]) {
         dayViews.forEach {
             daysStackView.removeArrangedSubview($0)
             $0.removeFromSuperview()
         }
         dayViews = items.enumerated().map { index, item in
-            let view = DayColumnView(item: item)
+            let view = WeeklyDayColumnView(item: item)
             view.onTap = { [weak self] in
                 self?.handleTap(on: index)
             }
@@ -214,7 +211,7 @@ private extension StatisticsWeeklyActivityChartView {
     }
 }
 
-private final class DayColumnView: UIView {
+private final class WeeklyDayColumnView: UIView {
     private enum Layout {
         static let chartHeight: CGFloat = 116
         static let barWidth: CGFloat = 18
@@ -228,10 +225,10 @@ private final class DayColumnView: UIView {
     private let tapButton = UIButton(type: .custom)
 
     private var barHeightConstraint: Constraint?
-    private let item: StatisticsWeeklyActivityModel.DayActivity
+    private let item: WeeklyActivityCardModel.DayActivity
     var onTap: (() -> Void)?
 
-    init(item: StatisticsWeeklyActivityModel.DayActivity) {
+    init(item: WeeklyActivityCardModel.DayActivity) {
         self.item = item
         super.init(frame: .zero)
         createUI()
@@ -243,7 +240,7 @@ private final class DayColumnView: UIView {
     }
 }
 
-private extension DayColumnView {
+private extension WeeklyDayColumnView {
     func createUI() {
         setupBarAreaView()
         setupBarView()
@@ -312,7 +309,7 @@ private extension DayColumnView {
         }
     }
 
-    func color(for style: StatisticsWeeklyActivityModel.DayActivity.Style) -> UIColor {
+    func color(for style: WeeklyActivityCardModel.DayActivity.Style) -> UIColor {
         switch style {
         case .primary:
             return DS.Colors.tertiary

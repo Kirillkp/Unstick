@@ -10,15 +10,18 @@ import Foundation
 final class MainCoordinator: BaseCoordinator {
     
     private let moduleFactory: ModuleFactory
+    private let coordinatorFactory: CoordinatorFactory
     private let router: Routable
     
     init(
         router: Routable,
-        moduleFactory: ModuleFactory
+        moduleFactory: ModuleFactory,
+        coordinatorFactory: CoordinatorFactory
     ) {
         
         self.router = router
         self.moduleFactory = moduleFactory
+        self.coordinatorFactory = coordinatorFactory
     }
     
     override func start() {
@@ -32,5 +35,14 @@ final class MainCoordinator: BaseCoordinator {
 }
 
 extension MainCoordinator: MainModuleDelegate {
-    func showNextAction() {}
+    func showNextAction() {
+        let coordinator = coordinatorFactory.makeGroupInsightCoordinator(router: router)
+        
+        coordinator.onFinish = { [weak self] coordinator in
+            self?.remove(child: coordinator)
+        }
+
+        add(child: coordinator)
+        coordinator.start()
+    }
 }
