@@ -8,7 +8,9 @@
 import Foundation
 import UIKit
 
-protocol GroupInsightModuleDelegate: AnyObject {}
+protocol GroupInsightModuleDelegate: AnyObject {
+    func showAppSelection()
+}
 
 final class GroupInsightPresenter {
     private weak var view: GroupInsightViewProtocol?
@@ -67,7 +69,9 @@ extension GroupInsightPresenter: GroupInsightPresenterProtocol {
 
     func viewWillDisappear(_ animated: Bool) {}
 
-    func didTapPrimaryAction() {}
+    func didTapPrimaryAction() {
+        delegate?.showAppSelection()
+    }
 }
 
 private extension GroupInsightPresenter {

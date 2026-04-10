@@ -29,6 +29,18 @@ final class GroupInsightCoordinator: BaseCoordinator {
         module.hidesBottomBarWhenPushed = true
         router.push(module, animated: true)
     }
+
+    private func runAppSelection() {
+        let module = moduleFactory.createAppSelection(delegate: self)
+        module.hidesBottomBarWhenPushed = true
+        router.push(module, animated: true)
+    }
 }
 
-extension GroupInsightCoordinator: GroupInsightModuleDelegate {}
+extension GroupInsightCoordinator: GroupInsightModuleDelegate {
+    func showAppSelection() {
+        runAppSelection()
+    }
+}
+
+extension GroupInsightCoordinator: AppSelectionModuleDelegate {}
