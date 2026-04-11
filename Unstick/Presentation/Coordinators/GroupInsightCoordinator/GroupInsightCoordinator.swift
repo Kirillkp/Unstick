@@ -35,6 +35,12 @@ final class GroupInsightCoordinator: BaseCoordinator {
         module.hidesBottomBarWhenPushed = true
         router.push(module, animated: true)
     }
+
+    private func runRestrictionSetup() {
+        let module = moduleFactory.createRestrictionSetup(delegate: self)
+        module.hidesBottomBarWhenPushed = true
+        router.push(module, animated: true)
+    }
 }
 
 extension GroupInsightCoordinator: GroupInsightModuleDelegate {
@@ -43,4 +49,10 @@ extension GroupInsightCoordinator: GroupInsightModuleDelegate {
     }
 }
 
-extension GroupInsightCoordinator: AppSelectionModuleDelegate {}
+extension GroupInsightCoordinator: AppSelectionModuleDelegate {
+    func showRestrictionSetup() {
+        runRestrictionSetup()
+    }
+}
+
+extension GroupInsightCoordinator: RestrictionSetupModuleDelegate {}

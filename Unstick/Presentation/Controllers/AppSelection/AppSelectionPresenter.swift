@@ -7,7 +7,9 @@
 
 import Foundation
 
-protocol AppSelectionModuleDelegate: AnyObject {}
+protocol AppSelectionModuleDelegate: AnyObject {
+    func showRestrictionSetup()
+}
 
 final class AppSelectionPresenter {
     private struct AppState {
@@ -69,7 +71,9 @@ extension AppSelectionPresenter: AppSelectionPresenterProtocol {
 
     func viewWillDisappear(_ animated: Bool) {}
 
-    func didTapContinue() {}
+    func didTapContinue() {
+        delegate?.showRestrictionSetup()
+    }
 }
 
 private extension AppSelectionPresenter {
