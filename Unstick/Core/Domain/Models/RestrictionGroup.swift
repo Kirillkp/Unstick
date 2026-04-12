@@ -11,6 +11,7 @@ struct RestrictionGroup: Codable, Equatable, Identifiable {
     let id: UUID
     var selectionData: Data
     var settings: RestrictionSettings
+    var usedMinutesToday: Int
     var status: RestrictionGroupStatus
     let createdAt: Date
     var updatedAt: Date
@@ -19,6 +20,7 @@ struct RestrictionGroup: Codable, Equatable, Identifiable {
         id: UUID = UUID(),
         selectionData: Data,
         settings: RestrictionSettings,
+        usedMinutesToday: Int = 0,
         status: RestrictionGroupStatus,
         createdAt: Date = Date(),
         updatedAt: Date = Date()
@@ -26,6 +28,7 @@ struct RestrictionGroup: Codable, Equatable, Identifiable {
         self.id = id
         self.selectionData = selectionData
         self.settings = settings
+        self.usedMinutesToday = usedMinutesToday
         self.status = status
         self.createdAt = createdAt
         self.updatedAt = updatedAt

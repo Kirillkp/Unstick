@@ -8,9 +8,15 @@
 import Foundation
 
 enum MainViewState {
-    case empty(MainEmptyStateModel)
+    case empty(Empty)
+    case noAccess(Empty)
     case filled(Filled)
 
+    struct Empty {
+        let indicatorState: IndicatorView.State
+        let emptyView: MainEmptyStateModel
+    }
+    
     struct Filled {
         let indicatorState: IndicatorView.State
         let actionTitle: String

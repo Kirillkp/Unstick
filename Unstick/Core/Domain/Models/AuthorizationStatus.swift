@@ -9,5 +9,5 @@ import Foundation
 
 enum AuthorizationStatus: String, Codable, Equatable {
     case available
-    case missing
+    case notAvailable
 }

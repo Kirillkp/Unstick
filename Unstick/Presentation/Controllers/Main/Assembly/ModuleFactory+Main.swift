@@ -15,6 +15,8 @@ extension ModuleFactory {
         let presenter = MainPresenter(
             view: viewController,
             factory: factory,
+            loadMainScreenUseCase: appServices.loadMainScreenUseCase,
+            openSettingsForAccessUseCase: appServices.openSettingsForAccessUseCase,
             delegate: delegate
         )
         viewController.presenter = presenter

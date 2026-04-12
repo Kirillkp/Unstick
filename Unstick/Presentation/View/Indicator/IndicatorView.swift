@@ -222,6 +222,7 @@ private extension IndicatorView {
         emptyTitleLabel.textColor = DS.Colors.textSecondary
         emptyTitleLabel.font = DS.Font.bold(30)
         emptyTitleLabel.textAlignment = .center
+        emptyTitleLabel.numberOfLines = 2
     }
 
     func setupEmptySubtitleLabel() {

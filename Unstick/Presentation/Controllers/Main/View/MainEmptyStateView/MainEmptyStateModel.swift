@@ -11,5 +11,4 @@ struct MainEmptyStateModel {
     let title: String
     let subtitle: String
     let actionTitle: String
-    let note: String
 }

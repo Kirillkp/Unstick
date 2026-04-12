@@ -73,6 +73,8 @@ extension MainViewController: MainViewProtocol {
         switch state {
         case .empty(let model):
             displayEmptyState(model)
+        case .noAccess(let model):
+            displayEmptyState(model)
         case .filled(let model):
             displayFilledState(model)
         }
@@ -140,7 +142,7 @@ private extension MainViewController {
         contentView.addSubview(emptyStateView)
         emptyStateView.snp.makeConstraints {
             $0.top.equalTo(indicatorView.snp.bottom).offset(DS.Spacing.x14)
-            $0.horizontalEdges.equalToSuperview().inset(DS.Spacing.x24)
+            $0.horizontalEdges.equalToSuperview()
         }
         contentView.snp.makeConstraints {
             contentBottomToEmptyStateConstraint = $0.bottom.equalTo(emptyStateView.snp.bottom).offset(contentBottomInset).constraint
@@ -179,9 +181,9 @@ private extension MainViewController {
         scrollView.verticalScrollIndicatorInsets.bottom = view.safeAreaInsets.bottom
     }
 
-    func displayEmptyState(_ model: MainEmptyStateModel) {
-        indicatorView.setState(.empty(.init()))
-        emptyStateView.configure(model)
+    func displayEmptyState(_ model: MainViewState.Empty) {
+        indicatorView.setState(model.indicatorState)
+        emptyStateView.configure(model.emptyView)
 
         emptyStateView.isHidden = false
         setCollectionHidden(true)

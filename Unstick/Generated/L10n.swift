@@ -5,6 +5,21 @@ import Foundation
 enum L10n {
 
     enum Common {
+        enum Duration {
+                static func hoursMinutesShortFormat(arg0: CVarArg, arg1: CVarArg) -> String {
+                    String(format: String(localized: "common.duration.hoursMinutesShortFormat"), arg0, arg1)
+                }
+
+                static func hoursShortFormat(arg0: CVarArg) -> String {
+                    String(format: String(localized: "common.duration.hoursShortFormat"), arg0)
+                }
+
+                static func minutesShortFormat(arg0: CVarArg) -> String {
+                    String(format: String(localized: "common.duration.minutesShortFormat"), arg0)
+                }
+
+        }
+
             static let next = String(localized: "common.Next")
 
     }
@@ -35,8 +50,6 @@ enum L10n {
         enum Empty {
                 static let actionTitle = String(localized: "main.empty.actionTitle")
 
-                static let note = String(localized: "main.empty.note")
-
                 static let subtitle = String(localized: "main.empty.subtitle")
 
                 static let title = String(localized: "main.empty.title")
@@ -49,6 +62,37 @@ enum L10n {
                 }
 
                 static let title = String(localized: "main.groups.title")
+
+        }
+
+        enum Indicator {
+                static let zeroPercent = String(localized: "main.indicator.zeroPercent")
+
+        }
+
+        enum NoAccess {
+                static let actionTitle = String(localized: "main.noAccess.actionTitle")
+
+                static let indicatorTitle = String(localized: "main.noAccess.indicatorTitle")
+
+                static let subtitle = String(localized: "main.noAccess.subtitle")
+
+                static let title = String(localized: "main.noAccess.title")
+
+        }
+
+        enum Usage {
+                static let configurationError = String(localized: "main.usage.configurationError")
+
+                static func limitExceededFormat(arg0: CVarArg, arg1: CVarArg) -> String {
+                    String(format: String(localized: "main.usage.limitExceededFormat"), arg0, arg1)
+                }
+
+                static let paused = String(localized: "main.usage.paused")
+
+                static func progressFormat(arg0: CVarArg, arg1: CVarArg) -> String {
+                    String(format: String(localized: "main.usage.progressFormat"), arg0, arg1)
+                }
 
         }
 
