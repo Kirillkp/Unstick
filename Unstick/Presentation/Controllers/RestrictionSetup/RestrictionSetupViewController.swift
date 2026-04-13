@@ -61,13 +61,9 @@ extension RestrictionSetupViewController: RestrictionSetupViewProtocol {
         collectionView
     }
 
-    func display(state: RestrictionSetupViewState) {
-        switch state {
-        case let .filled(_, _, _, _, _, continueTitle, isContinueEnabled):
-            continueButton.setTitle(continueTitle, for: .normal)
-            continueButton.isEnabled = isContinueEnabled
-            continueButton.alpha = isContinueEnabled ? 1 : 0.72
-        }
+    func setContinueEnabled(_ isEnabled: Bool) {
+        continueButton.isEnabled = isEnabled
+        continueButton.alpha = isEnabled ? 1 : 0.72
     }
 
     func refreshCollectionLayout() {
@@ -108,6 +104,8 @@ private extension RestrictionSetupViewController {
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(Layout.buttonBottomInset)
         }
         continueButton.setStyle(.primary, size: .xl)
+        continueButton.setTitle(L10n.Main.Empty.actionTitle, for: .normal)
+        setContinueEnabled(true)
         continueButton.addTarget(
             self,
             action: #selector(continueButtonTapped),

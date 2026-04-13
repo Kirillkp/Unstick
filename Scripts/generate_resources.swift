@@ -40,15 +40,99 @@ struct StringUnit: Codable {
     let value: String
 }
 
+struct L10nEntry {
+    let key: String
+    let value: String
+    let name: String
+    let enValue: String?
+    let ruValue: String?
+}
+
 final class L10nNode {
     var children: [String: L10nNode] = [:]
-    var entries: [(key: String, value: String, name: String)] = []
+    var entries: [L10nEntry] = []
 }
 
 // MARK: - HELPERS
 
 func argumentsCount(in string: String) -> Int {
-    return string.components(separatedBy: "%@").count - 1
+    var count = 0
+    var index = string.startIndex
+
+    while index < string.endIndex {
+        guard string[index] == "%" else {
+            index = string.index(after: index)
+            continue
+        }
+
+        let percentIndex = index
+        index = string.index(after: index)
+        guard index < string.endIndex else { break }
+
+        if string[index] == "%" {
+            index = string.index(after: index)
+            continue
+        }
+
+        while index < string.endIndex, string[index].isNumber {
+            index = string.index(after: index)
+        }
+        if index < string.endIndex, string[index] == "$" {
+            index = string.index(after: index)
+        } else {
+            index = string.index(after: percentIndex)
+        }
+
+        while index < string.endIndex, "-+ #0'".contains(string[index]) {
+            index = string.index(after: index)
+        }
+
+        if index < string.endIndex {
+            if string[index] == "*" {
+                count += 1
+                index = string.index(after: index)
+            } else {
+                while index < string.endIndex, string[index].isNumber {
+                    index = string.index(after: index)
+                }
+            }
+        }
+
+        if index < string.endIndex, string[index] == "." {
+            index = string.index(after: index)
+            if index < string.endIndex, string[index] == "*" {
+                count += 1
+                index = string.index(after: index)
+            } else {
+                while index < string.endIndex, string[index].isNumber {
+                    index = string.index(after: index)
+                }
+            }
+        }
+
+        if index < string.endIndex {
+            if string[index] == "h" {
+                index = string.index(after: index)
+                if index < string.endIndex, string[index] == "h" {
+                    index = string.index(after: index)
+                }
+            } else if string[index] == "l" {
+                index = string.index(after: index)
+                if index < string.endIndex, string[index] == "l" {
+                    index = string.index(after: index)
+                }
+            } else if "qLjzt".contains(string[index]) {
+                index = string.index(after: index)
+            }
+        }
+
+        if index < string.endIndex {
+            count += 1
+            index = string.index(after: index)
+        }
+    }
+
+    return count
 }
 
 func camelCase(_ string: String) -> String {
@@ -70,6 +154,11 @@ func indent(_ level: Int) -> String {
     String(repeating: "    ", count: level)
 }
 
+func escapedDocCommentValue(_ value: String?) -> String {
+    guard let value else { return "-" }
+    return value.replacingOccurrences(of: "\n", with: "\\n")
+}
+
 func render(node: L10nNode, level: Int) -> String {
     var result = ""
 
@@ -82,10 +171,14 @@ func render(node: L10nNode, level: Int) -> String {
 
     for entry in node.entries.sorted(by: { $0.key < $1.key }) {
         let argsCount = argumentsCount(in: entry.value)
+        let enValue = escapedDocCommentValue(entry.enValue)
+        let ruValue = escapedDocCommentValue(entry.ruValue)
 
         if argsCount == 0 {
             result += """
 
+\(indent(level))    /// EN: \(enValue)
+\(indent(level))    /// RU: \(ruValue)
 \(indent(level))    static let \(entry.name) = String(localized: "\(entry.key)")
 
 """
@@ -94,6 +187,8 @@ func render(node: L10nNode, level: Int) -> String {
             let args = (0..<argsCount).map { "arg\($0)" }.joined(separator: ", ")
             result += """
 
+\(indent(level))    /// EN: \(enValue)
+\(indent(level))    /// RU: \(ruValue)
 \(indent(level))    static func \(entry.name)(\(params)) -> String {
 \(indent(level))        String(format: String(localized: "\(entry.key)"), \(args))
 \(indent(level))    }
@@ -114,7 +209,10 @@ func generateL10n() throws {
     let root = L10nNode()
 
     for (key, entry) in decoded.strings {
-        guard let value = entry.localizations?.first?.value.stringUnit?.value else { continue }
+        let enValue = entry.localizations?["en"]?.stringUnit?.value
+        let ruValue = entry.localizations?["ru"]?.stringUnit?.value
+        let fallbackValue = entry.localizations?.values.compactMap { $0.stringUnit?.value }.first
+        guard let value = enValue ?? ruValue ?? fallbackValue else { continue }
         let parts = key.split(separator: ".")
         guard parts.count >= 2 else { continue }
 
@@ -128,7 +226,15 @@ func generateL10n() throws {
         }
 
         let leafName = camelCase(String(parts.last!))
-        currentNode.entries.append((key: key, value: value, name: leafName))
+        currentNode.entries.append(
+            L10nEntry(
+                key: key,
+                value: value,
+                name: leafName,
+                enValue: enValue,
+                ruValue: ruValue
+            )
+        )
     }
 
     var result = """

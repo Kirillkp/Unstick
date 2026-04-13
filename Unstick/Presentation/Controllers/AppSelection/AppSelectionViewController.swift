@@ -57,13 +57,9 @@ extension AppSelectionViewController: AppSelectionViewProtocol {
         collectionView
     }
 
-    func display(state: AppSelectionViewState) {
-        switch state {
-        case let .filled(_, _, continueTitle, isContinueEnabled):
-            continueButton.setTitle(continueTitle, for: .normal)
-            continueButton.isEnabled = isContinueEnabled
-            continueButton.alpha = isContinueEnabled ? 1 : 0.72
-        }
+    func setContinueEnabled(_ isEnabled: Bool) {
+        continueButton.isEnabled = isEnabled
+        continueButton.alpha = isEnabled ? 1 : 0.72
     }
 
     func refreshCollectionLayout() {
@@ -104,6 +100,8 @@ private extension AppSelectionViewController {
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(DS.Spacing.x16)
         }
         continueButton.setStyle(.primary, size: .xl)
+        continueButton.setTitle(L10n.Common.next, for: .normal)
+        setContinueEnabled(false)
         continueButton.addTarget(
             self,
             action: #selector(continueButtonTapped),

@@ -22,8 +22,7 @@ final class MainPresenter {
     private weak var view: MainViewProtocol?
     private weak var delegate: MainModuleDelegate?
     private let factory: MainFactoryProtocol
-    private let loadMainScreenUseCase: ILoadMainScreenUseCase
-    private let openSettingsForAccessUseCase: IOpenSettingsForAccessUseCase
+    private let useCases: IMainUseCases
     private let dataSource: AnyCollectionDataSource
 
     private var primaryAction: PrimaryAction = .createGroup
@@ -32,14 +31,12 @@ final class MainPresenter {
     init(
         view: MainViewProtocol,
         factory: MainFactoryProtocol,
-        loadMainScreenUseCase: ILoadMainScreenUseCase,
-        openSettingsForAccessUseCase: IOpenSettingsForAccessUseCase,
+        useCases: IMainUseCases,
         delegate: MainModuleDelegate?
     ) {
         self.view = view
         self.factory = factory
-        self.loadMainScreenUseCase = loadMainScreenUseCase
-        self.openSettingsForAccessUseCase = openSettingsForAccessUseCase
+        self.useCases = useCases
         self.delegate = delegate
         self.dataSource = AnyCollectionDataSource(collectionView: view._collectionView)
     }
@@ -71,7 +68,7 @@ extension MainPresenter: MainPresenterProtocol {
         case .createGroup:
             delegate?.showNextAction()
         case .openSettings:
-            openSettingsForAccessUseCase.execute()
+            useCases.openSettingsForAccess()
         }
     }
 }
@@ -88,7 +85,7 @@ private extension MainPresenter {
     func reloadMainState() {
         Task { @MainActor [weak self] in
             guard let self else { return }
-            let result = await loadMainScreenUseCase.execute()
+            let result = await useCases.loadMainScreen()
             self.render(result: result)
         }
     }
@@ -240,10 +237,6 @@ private extension MainPresenter {
         for group: RestrictionGroup,
         metrics: GroupUsageMetrics
     ) -> UsageSummaryCardModel.Style {
-        guard group.status != .configurationError else {
-            return .danger
-        }
-
         if metrics.usagePercent >= 90 {
             return .danger
         }
@@ -257,9 +250,6 @@ private extension MainPresenter {
         for group: RestrictionGroup,
         metrics: GroupUsageMetrics
     ) -> String {
-        if group.status == .configurationError {
-            return L10n.Main.Usage.configurationError
-        }
         if group.status == .paused {
             return L10n.Main.Usage.paused
         }
@@ -276,8 +266,8 @@ private extension MainPresenter {
         )
     }
 
-    func shouldShowWarningIcon(for group: RestrictionGroup) -> Bool {
-        group.status == .configurationError
+    func shouldShowWarningIcon(for _: RestrictionGroup) -> Bool {
+        false
     }
 
     func makeIndicatorValue(groups: [RestrictionGroup]) -> String {

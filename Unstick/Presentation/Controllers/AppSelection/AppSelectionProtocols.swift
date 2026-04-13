@@ -17,14 +17,13 @@ protocol AppSelectionPresenterProtocol: AnyObject {
 
 protocol AppSelectionFactoryProtocol: AnyObject {
     func makeCollectionContent(
-        hero: HeroSectionModel,
-        categories: [AppSelectionCategoryCardModel]
+        categories: [AppSelectionCategorySectionInput]
     ) -> [AnyCollectionSection]
 }
 
 protocol AppSelectionViewProtocol: AnyObject {
     var _collectionView: UICollectionView { get }
 
-    func display(state: AppSelectionViewState)
+    func setContinueEnabled(_ isEnabled: Bool)
     func refreshCollectionLayout()
 }

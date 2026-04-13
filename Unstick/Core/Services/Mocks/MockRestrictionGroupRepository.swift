@@ -88,7 +88,7 @@ private extension MockRestrictionGroupRepository {
             .init(selectionData: Data(), settings: settings[1], usedMinutesToday: 40, status: .active),   // 50...90% -> warning
             .init(selectionData: Data(), settings: settings[2], usedMinutesToday: 28, status: .active),   // >= 90% -> danger
             .init(selectionData: Data(), settings: settings[3], usedMinutesToday: 20, status: .paused),   // paused
-            .init(selectionData: Data(), settings: settings[4], usedMinutesToday: 22, status: .configurationError), // config error
+            .init(selectionData: Data(), settings: settings[4], usedMinutesToday: 22, status: .active),   // 50...90% -> warning
             .init(selectionData: Data(), settings: settings[5], usedMinutesToday: 65, status: .active)    // exceeded -> danger
         ]
     }

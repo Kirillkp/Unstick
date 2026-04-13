@@ -17,17 +17,13 @@ protocol RestrictionSetupPresenterProtocol: AnyObject {
 
 protocol RestrictionSetupFactoryProtocol: AnyObject {
     func makeCollectionContent(
-        hero: HeroSectionModel,
-        groupName: RestrictionSetupGroupNameCardModel,
-        dailyLimit: RestrictionSetupDailyLimitCardModel,
-        breakSettings: RestrictionSetupBreakCardModel,
-        onDemand: RestrictionSetupOnDemandCardModel
+        input: RestrictionSetupSectionInput
     ) -> [AnyCollectionSection]
 }
 
 protocol RestrictionSetupViewProtocol: AnyObject {
     var _collectionView: UICollectionView { get }
 
-    func display(state: RestrictionSetupViewState)
+    func setContinueEnabled(_ isEnabled: Bool)
     func refreshCollectionLayout()
 }

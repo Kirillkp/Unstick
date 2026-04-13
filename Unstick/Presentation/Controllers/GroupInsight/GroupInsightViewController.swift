@@ -54,13 +54,6 @@ extension GroupInsightViewController: GroupInsightViewProtocol {
         collectionView
     }
 
-    func display(state: GroupInsightViewState) {
-        switch state {
-        case .filled:
-            break
-        }
-    }
-
     func refreshCollectionLayout() {
         collectionView.collectionViewLayout.invalidateLayout()
         collectionView.layoutIfNeeded()

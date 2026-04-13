@@ -14,6 +14,7 @@ extension ModuleFactory {
         let presenter = AppSelectionPresenter(
             view: viewController,
             factory: factory,
+            useCases: appServices.appSelectionUseCases,
             delegate: delegate
         )
 

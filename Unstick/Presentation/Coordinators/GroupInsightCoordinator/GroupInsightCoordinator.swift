@@ -55,4 +55,9 @@ extension GroupInsightCoordinator: AppSelectionModuleDelegate {
     }
 }
 
-extension GroupInsightCoordinator: RestrictionSetupModuleDelegate {}
+extension GroupInsightCoordinator: RestrictionSetupModuleDelegate {
+    func didFinishRestrictionSetup() {
+        router.popToRootModule(animated: true)
+        onFinish?(self)
+    }
+}

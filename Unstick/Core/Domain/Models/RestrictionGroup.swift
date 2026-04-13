@@ -38,5 +38,4 @@ struct RestrictionGroup: Codable, Equatable, Identifiable {
 enum RestrictionGroupStatus: String, Codable, CaseIterable {
     case active
     case paused
-    case configurationError
 }

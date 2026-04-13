@@ -19,17 +19,13 @@ protocol GroupInsightFactoryProtocol: AnyObject {
     var onDidTapPrimaryAction: (() -> Void)? { get set }
 
     func makeCollectionContent(
-        hero: HeroSectionModel,
-        primaryActionTitle: String,
-        activity: WeeklyActivityCardModel,
-        topAppsHeader: MainGroupsSectionHeaderModel,
-        topApps: [UsageSummaryCardModel]
+        activityItems: [GroupInsightActivityItem],
+        topApps: [UsageApp]
     ) -> [AnyCollectionSection]
 }
 
 protocol GroupInsightViewProtocol: AnyObject {
     var _collectionView: UICollectionView { get }
 
-    func display(state: GroupInsightViewState)
     func refreshCollectionLayout()
 }

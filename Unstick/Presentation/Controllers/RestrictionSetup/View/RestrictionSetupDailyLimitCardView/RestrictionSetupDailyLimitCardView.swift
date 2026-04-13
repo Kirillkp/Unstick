@@ -169,10 +169,10 @@ extension RestrictionSetupDailyLimitCardView: UIPickerViewDataSource, UIPickerVi
         component: Int
     ) -> String {
         if component == 0 {
-            return "\(hours[row]) ч"
+            return L10n.RestrictionSetup.DailyLimit.hourValueFormat(arg0: hours[row])
         }
 
-        return "\(minutes[row]) мин"
+        return L10n.RestrictionSetup.DailyLimit.minuteValueFormat(arg0: minutes[row])
     }
 
     func pickerView(

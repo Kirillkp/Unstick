@@ -9,8 +9,10 @@ import Foundation
 
 protocol AppServicing: AnyObject {
     var userDefaultsService: UserDefaultsServicing { get }
-    var loadMainScreenUseCase: ILoadMainScreenUseCase { get }
-    var openSettingsForAccessUseCase: IOpenSettingsForAccessUseCase { get }
+    var mainUseCases: IMainUseCases { get }
+    var groupInsightUseCases: IGroupInsightUseCases { get }
+    var appSelectionUseCases: IAppSelectionUseCases { get }
+    var restrictionSetupUseCases: IRestrictionSetupUseCases { get }
 
     func shouldShowOnboarding() -> Bool
     func completeOnboarding()
@@ -18,9 +20,16 @@ protocol AppServicing: AnyObject {
 
 final class AppServices: AppServicing {
 
+    /// Доступ к user defaults и debug-флагам приложения.
     let userDefaultsService: UserDefaultsServicing
-    let loadMainScreenUseCase: ILoadMainScreenUseCase
-    let openSettingsForAccessUseCase: IOpenSettingsForAccessUseCase
+    /// Use cases главного экрана: загрузка состояния и переход в Settings.
+    let mainUseCases: IMainUseCases
+    /// Use cases экрана GroupInsight: загрузка аналитики и старт create-group flow.
+    let groupInsightUseCases: IGroupInsightUseCases
+    /// Use cases экрана AppSelection: загрузка, сохранение и валидация selection.
+    let appSelectionUseCases: IAppSelectionUseCases
+    /// Use cases экрана RestrictionSetup: загрузка, валидация и создание группы.
+    let restrictionSetupUseCases: IRestrictionSetupUseCases
 
     init(userDefaultsService: UserDefaultsServicing = UserDefaultsService()) {
         self.userDefaultsService = userDefaultsService
@@ -31,12 +40,29 @@ final class AppServices: AppServicing {
             }
         )
         let groupRepository = MockRestrictionGroupRepository()
-        self.loadMainScreenUseCase = LoadMainScreenUseCase(
+        let groupCreationSessionStore = MockGroupCreationSessionStore()
+        let appSelectionCatalogService = MockAppSelectionCatalogService()
+        let usageInsightsService = MockUsageInsightsService()
+        let groupPolicyService = MockGroupPolicyService()
+
+        self.mainUseCases = MainUseCases(
             authorizationService: authorizationService,
             groupRepository: groupRepository
         )
-        self.openSettingsForAccessUseCase = OpenSettingsForAccessUseCase(
-            authorizationService: authorizationService
+        self.groupInsightUseCases = GroupInsightUseCases(
+            authorizationService: authorizationService,
+            usageInsightsService: usageInsightsService,
+            sessionStore: groupCreationSessionStore
+        )
+        self.appSelectionUseCases = AppSelectionUseCases(
+            sessionStore: groupCreationSessionStore,
+            catalogService: appSelectionCatalogService
+        )
+        self.restrictionSetupUseCases = RestrictionSetupUseCases(
+            authorizationService: authorizationService,
+            groupRepository: groupRepository,
+            sessionStore: groupCreationSessionStore,
+            groupPolicyService: groupPolicyService
         )
     }
 

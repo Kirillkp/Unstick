@@ -7,6 +7,32 @@
 
 import Foundation
 
+enum UsageWeekday: String, Codable, CaseIterable {
+    case mon
+    case tue
+    case wed
+    case thu
+    case fri
+    case sat
+    case sun
+}
+
+struct UsageDayActivity: Codable, Equatable, Identifiable {
+    let id: UUID
+    var weekday: UsageWeekday
+    var usageMinutes: Int
+
+    init(
+        id: UUID = UUID(),
+        weekday: UsageWeekday,
+        usageMinutes: Int
+    ) {
+        self.id = id
+        self.weekday = weekday
+        self.usageMinutes = usageMinutes
+    }
+}
+
 struct UsageSummary: Codable, Equatable {
     var averageDailyMinutes: Int
     var totalMinutes: Int

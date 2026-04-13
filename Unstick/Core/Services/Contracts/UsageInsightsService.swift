@@ -14,8 +14,11 @@ protocol IUsageInsightsService {
     /// - Returns: Сводка или `nil`, если данные недоступны.
     func weeklySummary() async throws -> UsageSummary?
 
-    /// Возвращает список наиболее используемых приложений.
-    /// - Parameter limit: Максимальное количество приложений в выдаче.
+    /// Возвращает активность по дням за последние 7 дней.
+    /// - Returns: Список дневной активности.
+    func weeklyActivity() async throws -> [UsageDayActivity]
+
+    /// Возвращает полный список используемых приложений.
     /// - Returns: Отсортированный список по времени использования.
-    func topApps(limit: Int) async throws -> [UsageApp]
+    func topApps() async throws -> [UsageApp]
 }

@@ -75,7 +75,7 @@ extension RestrictionSetupMinutesPopoverViewController {
         let isSelected = minute == selectedValue
 
         var content = cell.defaultContentConfiguration()
-        content.text = "\(minute) мин"
+        content.text = L10n.RestrictionSetup.MinutesPopover.minuteValueFormat(arg0: minute)
         content.textProperties.font = DS.Font.medium(17)
         content.textProperties.color = DS.Colors.textSecondary
         cell.contentConfiguration = content
@@ -102,4 +102,3 @@ extension RestrictionSetupMinutesPopoverViewController: UIPopoverPresentationCon
         .none
     }
 }
-

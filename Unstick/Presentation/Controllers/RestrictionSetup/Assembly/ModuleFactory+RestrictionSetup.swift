@@ -14,6 +14,7 @@ extension ModuleFactory {
         let presenter = RestrictionSetupPresenter(
             view: viewController,
             factory: factory,
+            useCases: appServices.restrictionSetupUseCases,
             delegate: delegate
         )
 
@@ -21,4 +22,3 @@ extension ModuleFactory {
         return viewController
     }
 }
-

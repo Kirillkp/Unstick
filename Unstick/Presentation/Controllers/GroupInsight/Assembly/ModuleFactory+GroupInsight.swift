@@ -14,6 +14,7 @@ extension ModuleFactory {
         let presenter = GroupInsightPresenter(
             view: viewController,
             factory: factory,
+            useCases: appServices.groupInsightUseCases,
             delegate: delegate
         )
 
