@@ -16,6 +16,7 @@ protocol GroupDetailsPresenterProtocol: AnyObject {
 
 protocol GroupDetailsFactoryProtocol: AnyObject {
     var onDidTapStatusAction: (() -> Void)? { get set }
+    var onDidTapUpdateAction: (() -> Void)? { get set }
     var onDidTapDeleteAction: (() -> Void)? { get set }
 
     func makeCollectionContent(
@@ -27,4 +28,5 @@ protocol GroupDetailsViewProtocol: AnyObject {
     var _collectionView: UICollectionView { get }
 
     func refreshCollectionLayout()
+    func setNavigationTitle(_ title: String)
 }

@@ -18,6 +18,7 @@ enum GroupDetailsCollectionLayoutBuilder {
         static let onDemandEstimatedHeight: CGFloat = 340
         static let appsHeaderEstimatedHeight: CGFloat = 44
         static let appsListEstimatedHeight: CGFloat = 260
+        static let updateActionEstimatedHeight: CGFloat = 64
         static let deleteActionEstimatedHeight: CGFloat = 64
     }
 
@@ -76,6 +77,11 @@ enum GroupDetailsCollectionLayoutBuilder {
             case .deleteAction:
                 return makeSection(
                     estimatedHeight: Layout.deleteActionEstimatedHeight,
+                    topInset: DS.Spacing.x16
+                )
+            case .updateAction:
+                return makeSection(
+                    estimatedHeight: Layout.updateActionEstimatedHeight,
                     topInset: DS.Spacing.x32
                 )
             }

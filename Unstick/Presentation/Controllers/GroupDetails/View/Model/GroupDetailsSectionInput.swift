@@ -56,6 +56,11 @@ struct GroupDetailsSectionInput {
         let usageText: String
     }
 
+    struct UpdateAction: Sendable {
+        let title: String
+        let isEnabled: Bool
+    }
+
     let statusControl: StatusControl
     let usageSummary: UsageSummary
     let groupName: String
@@ -65,4 +70,5 @@ struct GroupDetailsSectionInput {
     let onDemand: OnDemand
     let appsTitle: String
     let appRows: [AppUsageRow]
+    let updateAction: UpdateAction
 }

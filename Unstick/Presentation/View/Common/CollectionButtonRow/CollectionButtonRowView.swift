@@ -31,6 +31,8 @@ extension CollectionButtonRowView: ConfigurableView {
         button.setStyle(model.buttonStyle, size: model.buttonSize)
         button.setTitle(model.title, for: .normal)
         button.setImage(model.image, for: .normal)
+        button.isEnabled = model.isEnabled
+        button.alpha = model.isEnabled ? 1 : 0.52
         onTap = model.onTap
     }
 }

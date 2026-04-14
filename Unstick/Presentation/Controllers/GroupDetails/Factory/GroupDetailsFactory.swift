@@ -10,6 +10,7 @@ import UIKit
 
 final class GroupDetailsFactory: GroupDetailsFactoryProtocol {
     var onDidTapStatusAction: (() -> Void)?
+    var onDidTapUpdateAction: (() -> Void)?
     var onDidTapDeleteAction: (() -> Void)?
 
     func makeCollectionContent(
@@ -17,7 +18,7 @@ final class GroupDetailsFactory: GroupDetailsFactoryProtocol {
     ) -> [AnyCollectionSection] {
         let statusModel = makeStatusControlModel(input.statusControl)
         let usageSummaryModel = makeUsageSummaryModel(input.usageSummary)
-        let settingsHeaderModel = makeSectionTitleModel("Настройки группы")
+        let settingsHeaderModel = makeSectionTitleModel(L10n.GroupDetails.Settings.title)
         let groupNameModel = makeGroupNameModel(
             value: input.groupName,
             onValueChanged: input.onGroupNameChanged
@@ -27,6 +28,7 @@ final class GroupDetailsFactory: GroupDetailsFactoryProtocol {
         let onDemandModel = makeOnDemandModel(input.onDemand)
         let appsHeaderModel = makeSectionTitleModel(input.appsTitle)
         let appsListModel = makeAppsListModel(input.appRows)
+        let updateActionModel = makeUpdateActionModel(input.updateAction)
         let deleteActionModel = makeDeleteActionModel()
 
         return [
@@ -76,6 +78,11 @@ final class GroupDetailsFactory: GroupDetailsFactoryProtocol {
                 items: [AnyCollectionItem(appsListModel)]
             ),
             AnyCollectionSection(
+                id: GroupDetailsCollectionSection.updateAction,
+                identifier: GroupDetailsCollectionSection.updateAction.sectionIdentifier,
+                items: [AnyCollectionItem(updateActionModel)]
+            ),
+            AnyCollectionSection(
                 id: GroupDetailsCollectionSection.deleteAction,
                 identifier: GroupDetailsCollectionSection.deleteAction.sectionIdentifier,
                 items: [AnyCollectionItem(deleteActionModel)]
@@ -93,6 +100,8 @@ private extension GroupDetailsFactory {
         static let breakSettings = UUID(uuidString: "56CE9528-6508-4581-A018-E40FE9864D72") ?? UUID()
         static let onDemand = UUID(uuidString: "91D0C6BB-E261-4B37-AEFF-3B554A76123D") ?? UUID()
         static let appsList = UUID(uuidString: "08B6D4D2-7C8E-4FA4-9A1A-4AB512BBF8B0") ?? UUID()
+        static let updateActionEnabled = UUID(uuidString: "8CD8A908-F8CC-42D4-BAE0-7DE253A52631") ?? UUID()
+        static let updateActionDisabled = UUID(uuidString: "03B3B6CF-2652-47EF-A4CA-C75664F37366") ?? UUID()
         static let deleteAction = UUID(uuidString: "40CF442A-31D9-4356-9CF2-53DF73F5549A") ?? UUID()
     }
 
@@ -116,7 +125,7 @@ private extension GroupDetailsFactory {
             id: IDs.usageSummary,
             title: usage.title,
             valueText: formatMinutes(usage.usedMinutes),
-            limitText: "из \(formatMinutes(usage.limitMinutes))",
+            limitText: L10n.GroupDetails.Usage.limitFormat(arg0: formatMinutes(usage.limitMinutes)),
             progress: usage.progress
         )
     }
@@ -202,10 +211,20 @@ private extension GroupDetailsFactory {
         )
     }
 
+    func makeUpdateActionModel(_ input: GroupDetailsSectionInput.UpdateAction) -> CollectionButtonRowModel {
+        CollectionButtonRowModel(
+            id: input.isEnabled ? IDs.updateActionEnabled : IDs.updateActionDisabled,
+            title: input.title,
+            buttonStyle: .primary,
+            isEnabled: input.isEnabled,
+            onTap: input.isEnabled ? onDidTapUpdateAction : nil
+        )
+    }
+
     func makeDeleteActionModel() -> CollectionButtonRowModel {
         CollectionButtonRowModel(
             id: IDs.deleteAction,
-            title: "Удалить группу",
+            title: L10n.GroupDetails.Delete.actionTitle,
             image: UIImage(systemName: "trash"),
             buttonStyle: .custom(
                 DS.ButtonConfiguration(

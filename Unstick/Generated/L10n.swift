@@ -55,6 +55,89 @@ enum L10n {
 
     }
 
+    enum GroupDetails {
+        enum Apps {
+                /// EN: Apps in group
+                /// RU: Приложения в группе
+                static let title = String(localized: "groupDetails.apps.title")
+
+        }
+
+        enum Delete {
+                /// EN: Delete group
+                /// RU: Удалить группу
+                static let actionTitle = String(localized: "groupDetails.delete.actionTitle")
+
+        }
+
+        enum Settings {
+                /// EN: Group settings
+                /// RU: Настройки группы
+                static let title = String(localized: "groupDetails.settings.title")
+
+        }
+
+        enum Status {
+                /// EN: Pause group
+                /// RU: Приостановить группу
+                static let activeAction = String(localized: "groupDetails.status.activeAction")
+
+                /// EN: Restrictions are applied to all apps in this group.
+                /// RU: Ограничения применяются ко всем приложениям в этой группе.
+                static let activeSubtitle = String(localized: "groupDetails.status.activeSubtitle")
+
+                /// EN: ACTIVE
+                /// RU: АКТИВНА
+                static let activeTitle = String(localized: "groupDetails.status.activeTitle")
+
+                /// EN: Refresh
+                /// RU: Обновить
+                static let noDataAction = String(localized: "groupDetails.status.noDataAction")
+
+                /// EN: Group not found.
+                /// RU: Группа не найдена.
+                static let noDataSubtitle = String(localized: "groupDetails.status.noDataSubtitle")
+
+                /// EN: NO DATA
+                /// RU: НЕТ ДАННЫХ
+                static let noDataTitle = String(localized: "groupDetails.status.noDataTitle")
+
+                /// EN: Resume group
+                /// RU: Возобновить группу
+                static let pausedAction = String(localized: "groupDetails.status.pausedAction")
+
+                /// EN: Restrictions are temporarily disabled for apps in this group.
+                /// RU: Ограничения временно отключены для приложений этой группы.
+                static let pausedSubtitle = String(localized: "groupDetails.status.pausedSubtitle")
+
+                /// EN: PAUSED
+                /// RU: НА ПАУЗЕ
+                static let pausedTitle = String(localized: "groupDetails.status.pausedTitle")
+
+        }
+
+        enum Update {
+                /// EN: Update data
+                /// RU: Обновить данные
+                static let actionTitle = String(localized: "groupDetails.update.actionTitle")
+
+        }
+
+        enum Usage {
+                /// EN: of %@
+                /// RU: из %@
+                static func limitFormat(arg0: CVarArg) -> String {
+                    String(format: String(localized: "groupDetails.usage.limitFormat"), arg0)
+                }
+
+                /// EN: USED TODAY
+                /// RU: ИСПОЛЬЗОВАНО СЕГОДНЯ
+                static let title = String(localized: "groupDetails.usage.title")
+
+        }
+
+    }
+
     enum GroupInsight {
         enum Action {
                 /// EN: Select apps

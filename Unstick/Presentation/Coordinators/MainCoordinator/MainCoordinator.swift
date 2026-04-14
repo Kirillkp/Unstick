@@ -47,8 +47,16 @@ extension MainCoordinator: MainModuleDelegate {
     }
 
     func showGroupDetails(groupId: UUID) {
-        _ = groupId
-        let module = moduleFactory.createGroupDetails(delegate: nil)
+        let module = moduleFactory.createGroupDetails(
+            groupId: groupId,
+            delegate: self
+        )
         router.push(module)
+    }
+}
+
+extension MainCoordinator: GroupDetailsModuleDelegate {
+    func didFinishGroupDetails() {
+        router.popModule(animated: true)
     }
 }

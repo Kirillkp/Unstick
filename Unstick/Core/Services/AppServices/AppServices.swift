@@ -13,6 +13,7 @@ protocol AppServicing: AnyObject {
     var groupInsightUseCases: IGroupInsightUseCases { get }
     var appSelectionUseCases: IAppSelectionUseCases { get }
     var restrictionSetupUseCases: IRestrictionSetupUseCases { get }
+    var groupDetailsUseCases: IGroupDetailsUseCases { get }
 
     func shouldShowOnboarding() -> Bool
     func completeOnboarding()
@@ -30,6 +31,8 @@ final class AppServices: AppServicing {
     let appSelectionUseCases: IAppSelectionUseCases
     /// Use cases экрана RestrictionSetup: загрузка, валидация и создание группы.
     let restrictionSetupUseCases: IRestrictionSetupUseCases
+    /// Use cases экрана GroupDetails: загрузка и действия pause/resume/delete.
+    let groupDetailsUseCases: IGroupDetailsUseCases
 
     init(userDefaultsService: UserDefaultsServicing = UserDefaultsService()) {
         self.userDefaultsService = userDefaultsService
@@ -63,6 +66,12 @@ final class AppServices: AppServicing {
             groupRepository: groupRepository,
             sessionStore: groupCreationSessionStore,
             groupPolicyService: groupPolicyService
+        )
+        self.groupDetailsUseCases = GroupDetailsUseCases(
+            authorizationService: authorizationService,
+            groupRepository: groupRepository,
+            groupPolicyService: groupPolicyService,
+            catalogService: appSelectionCatalogService
         )
     }
 

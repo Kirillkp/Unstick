@@ -8,12 +8,17 @@
 import UIKit
 
 extension ModuleFactory {
-    func createGroupDetails(delegate: GroupDetailsModuleDelegate?) -> GroupDetailsViewController {
+    func createGroupDetails(
+        groupId: UUID,
+        delegate: GroupDetailsModuleDelegate?
+    ) -> GroupDetailsViewController {
         let viewController = GroupDetailsViewController()
         let factory = GroupDetailsFactory()
         let presenter = GroupDetailsPresenter(
             view: viewController,
             factory: factory,
+            useCases: appServices.groupDetailsUseCases,
+            groupId: groupId,
             delegate: delegate
         )
 
@@ -21,4 +26,3 @@ extension ModuleFactory {
         return viewController
     }
 }
-

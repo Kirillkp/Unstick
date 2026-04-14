@@ -17,6 +17,7 @@ nonisolated enum GroupDetailsCollectionSection: Int, CaseIterable, SectionIdenti
     case onDemand
     case appsHeader
     case appsList
+    case updateAction
     case deleteAction
 
     var sectionIdentifier: String {

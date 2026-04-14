@@ -63,6 +63,10 @@ extension GroupDetailsViewController: GroupDetailsViewProtocol {
         collectionView.layoutIfNeeded()
         view.layoutIfNeeded()
     }
+
+    func setNavigationTitle(_ title: String) {
+        navigationItem.title = title
+    }
 }
 
 private extension GroupDetailsViewController {
@@ -104,4 +108,3 @@ private extension GroupDetailsViewController {
         }
     }
 }
-

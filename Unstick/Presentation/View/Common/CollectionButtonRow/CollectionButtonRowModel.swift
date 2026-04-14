@@ -13,6 +13,7 @@ nonisolated struct CollectionButtonRowModel: BaseCellViewModel, @unchecked Senda
     let image: UIImage?
     let buttonStyle: DS.ButtonStyle
     let buttonSize: DS.ButtonSize
+    let isEnabled: Bool
     let onTap: (() -> Void)?
 
     init(
@@ -21,6 +22,7 @@ nonisolated struct CollectionButtonRowModel: BaseCellViewModel, @unchecked Senda
         image: UIImage? = nil,
         buttonStyle: DS.ButtonStyle = .secondaryDashed,
         buttonSize: DS.ButtonSize = .xl,
+        isEnabled: Bool = true,
         onTap: (() -> Void)? = nil
     ) {
         self.id = id
@@ -28,6 +30,7 @@ nonisolated struct CollectionButtonRowModel: BaseCellViewModel, @unchecked Senda
         self.image = image
         self.buttonStyle = buttonStyle
         self.buttonSize = buttonSize
+        self.isEnabled = isEnabled
         self.onTap = onTap
     }
 
