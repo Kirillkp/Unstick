@@ -10,6 +10,7 @@ import UIKit
 
 protocol MainModuleDelegate: AnyObject {
     func showNextAction()
+    func showGroupDetails(groupId: UUID)
 }
 
 @MainActor
@@ -215,7 +216,10 @@ private extension MainPresenter {
             appIcons: [
                 .init(image: UIImage(systemName: "square.stack.3d.up.fill"))
             ],
-            showsWarningIcon: showsWarningIcon
+            showsWarningIcon: showsWarningIcon,
+            onTap: { [weak self] in
+                self?.delegate?.showGroupDetails(groupId: group.id)
+            }
         )
     }
 

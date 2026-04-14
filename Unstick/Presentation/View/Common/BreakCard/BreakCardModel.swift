@@ -1,13 +1,13 @@
 //
-//  RestrictionSetupBreakCardModel.swift
+//  BreakCardModel.swift
 //  Unstick
 //
-//  Created by Codex on 11.04.2026.
+//  Created by Codex on 14.04.2026.
 //
 
 import Foundation
 
-nonisolated struct RestrictionSetupBreakCardModel: BaseCellViewModel, @unchecked Sendable {
+nonisolated struct BreakCardModel: BaseCellViewModel, @unchecked Sendable {
     let id: UUID
     let title: String
     let subtitle: String
@@ -56,12 +56,12 @@ nonisolated struct RestrictionSetupBreakCardModel: BaseCellViewModel, @unchecked
     }
 
     var registration: CollectionReusableRegistration {
-        .cell(AnyCollectionCell<RestrictionSetupBreakCardView>.self)
+        .cell(AnyCollectionCell<BreakCardView>.self)
     }
 
     nonisolated static func == (
-        lhs: RestrictionSetupBreakCardModel,
-        rhs: RestrictionSetupBreakCardModel
+        lhs: BreakCardModel,
+        rhs: BreakCardModel
     ) -> Bool {
         lhs.id == rhs.id
             && lhs.title == rhs.title
@@ -90,3 +90,4 @@ nonisolated struct RestrictionSetupBreakCardModel: BaseCellViewModel, @unchecked
         hasher.combine(minuteOptions)
     }
 }
+

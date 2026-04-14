@@ -1,14 +1,14 @@
 //
-//  RestrictionSetupDailyLimitCardView.swift
+//  DailyLimitCardView.swift
 //  Unstick
 //
-//  Created by Codex on 11.04.2026.
+//  Created by Codex on 14.04.2026.
 //
 
 import UIKit
 import SnapKit
 
-final class RestrictionSetupDailyLimitCardView: UIView {
+final class DailyLimitCardView: UIView {
     private enum Layout {
         static let cardInset: CGFloat = DS.Spacing.x20
         static let iconContainerSize = CGSize(width: 40, height: 40)
@@ -40,9 +40,9 @@ final class RestrictionSetupDailyLimitCardView: UIView {
     }
 }
 
-extension RestrictionSetupDailyLimitCardView: ConfigurableView {
+extension DailyLimitCardView: ConfigurableView {
     func configure(with model: any BaseCellViewModel) {
-        guard let model = model as? RestrictionSetupDailyLimitCardModel else { return }
+        guard let model = model as? DailyLimitCardModel else { return }
 
         titleLabel.text = model.title
         captionLabel.text = model.caption
@@ -62,7 +62,7 @@ extension RestrictionSetupDailyLimitCardView: ConfigurableView {
     }
 }
 
-private extension RestrictionSetupDailyLimitCardView {
+private extension DailyLimitCardView {
     func createUI() {
         setupSelf()
         setupCardView()
@@ -155,7 +155,7 @@ private extension RestrictionSetupDailyLimitCardView {
     }
 }
 
-extension RestrictionSetupDailyLimitCardView: UIPickerViewDataSource, UIPickerViewDelegate {
+extension DailyLimitCardView: UIPickerViewDataSource, UIPickerViewDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         2
     }
@@ -213,3 +213,4 @@ extension RestrictionSetupDailyLimitCardView: UIPickerViewDataSource, UIPickerVi
         onMinuteChanged?(minutes[row])
     }
 }
+

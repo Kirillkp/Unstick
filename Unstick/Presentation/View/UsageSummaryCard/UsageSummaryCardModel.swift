@@ -31,6 +31,7 @@ nonisolated struct UsageSummaryCardModel: Hashable {
     let appIcons: [AppIcon]
     let extraCount: Int?
     let showsWarningIcon: Bool
+    let onTap: (() -> Void)?
 
     init(
         id: UUID = UUID(),
@@ -40,7 +41,8 @@ nonisolated struct UsageSummaryCardModel: Hashable {
         style: Style,
         appIcons: [AppIcon],
         extraCount: Int? = nil,
-        showsWarningIcon: Bool = false
+        showsWarningIcon: Bool = false,
+        onTap: (() -> Void)? = nil
     ) {
         self.id = id
         self.title = title
@@ -50,6 +52,7 @@ nonisolated struct UsageSummaryCardModel: Hashable {
         self.appIcons = appIcons
         self.extraCount = extraCount
         self.showsWarningIcon = showsWarningIcon
+        self.onTap = onTap
     }
 
     nonisolated static func == (

@@ -33,6 +33,7 @@ final class UsageSummaryCardView: UIView {
     private var progressWidthConstraint: Constraint?
     private var trailingIconsWidthConstraint: Constraint?
     private var iconViews: [UIView] = []
+    private var onTap: (() -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -58,6 +59,7 @@ extension UsageSummaryCardView {
         applyText(model)
         applyProgress(model)
         applyIcons(model)
+        onTap = model.onTap
     }
 }
 
@@ -92,6 +94,7 @@ private extension UsageSummaryCardView {
         setupTrailingIconsContainerView()
         setupProgressTrackView()
         setupProgressFillView()
+        setupTapGesture()
     }
 
     func setupSelf() {
@@ -214,6 +217,12 @@ private extension UsageSummaryCardView {
 
         progressGradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         progressGradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+    }
+
+    func setupTapGesture() {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        addGestureRecognizer(gesture)
+        isUserInteractionEnabled = true
     }
 
     func applyStyle(_ style: UsageSummaryCardModel.Style) {
@@ -369,5 +378,10 @@ private extension UsageSummaryCardView {
                 ]
             )
         }
+    }
+
+    @objc
+    func handleTap() {
+        onTap?()
     }
 }

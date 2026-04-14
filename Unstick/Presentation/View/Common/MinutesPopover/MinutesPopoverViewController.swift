@@ -1,13 +1,13 @@
 //
-//  RestrictionSetupMinutesPopoverViewController.swift
+//  MinutesPopoverViewController.swift
 //  Unstick
 //
-//  Created by Codex on 11.04.2026.
+//  Created by Codex on 14.04.2026.
 //
 
 import UIKit
 
-final class RestrictionSetupMinutesPopoverViewController: UITableViewController {
+final class MinutesPopoverViewController: UITableViewController {
     private enum Layout {
         static let rowHeight: CGFloat = 44
         static let preferredWidth: CGFloat = 160
@@ -42,7 +42,7 @@ final class RestrictionSetupMinutesPopoverViewController: UITableViewController 
     }
 }
 
-private extension RestrictionSetupMinutesPopoverViewController {
+private extension MinutesPopoverViewController {
     func setupSelf() {
         view.backgroundColor = DS.Colors.surfacePrimary
     }
@@ -61,7 +61,7 @@ private extension RestrictionSetupMinutesPopoverViewController {
     }
 }
 
-extension RestrictionSetupMinutesPopoverViewController {
+extension MinutesPopoverViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         options.count
     }
@@ -94,7 +94,7 @@ extension RestrictionSetupMinutesPopoverViewController {
     }
 }
 
-extension RestrictionSetupMinutesPopoverViewController: UIPopoverPresentationControllerDelegate {
+extension MinutesPopoverViewController: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(
         for controller: UIPresentationController,
         traitCollection: UITraitCollection
@@ -102,3 +102,4 @@ extension RestrictionSetupMinutesPopoverViewController: UIPopoverPresentationCon
         .none
     }
 }
+

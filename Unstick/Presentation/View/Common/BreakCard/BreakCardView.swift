@@ -1,14 +1,14 @@
 //
-//  RestrictionSetupBreakCardView.swift
+//  BreakCardView.swift
 //  Unstick
 //
-//  Created by Codex on 11.04.2026.
+//  Created by Codex on 14.04.2026.
 //
 
 import UIKit
 import SnapKit
 
-final class RestrictionSetupBreakCardView: UIView {
+final class BreakCardView: UIView {
     private enum Layout {
         static let iconContainerSize = CGSize(width: 40, height: 40)
         static let iconSize = CGSize(width: 18, height: 18)
@@ -43,9 +43,9 @@ final class RestrictionSetupBreakCardView: UIView {
     }
 }
 
-extension RestrictionSetupBreakCardView: ConfigurableView {
+extension BreakCardView: ConfigurableView {
     func configure(with model: any BaseCellViewModel) {
-        guard let model = model as? RestrictionSetupBreakCardModel else { return }
+        guard let model = model as? BreakCardModel else { return }
 
         titleLabel.text = model.title
         subtitleLabel.text = model.subtitle
@@ -77,7 +77,7 @@ extension RestrictionSetupBreakCardView: ConfigurableView {
     }
 }
 
-private extension RestrictionSetupBreakCardView {
+private extension BreakCardView {
     func createUI() {
         setupSelf()
         setupCardView()
@@ -216,7 +216,7 @@ private extension RestrictionSetupBreakCardView {
         guard !minuteOptions.isEmpty else { return }
         guard let hostViewController else { return }
 
-        let controller = RestrictionSetupMinutesPopoverViewController(
+        let controller = MinutesPopoverViewController(
             options: minuteOptions,
             selectedValue: selectedMinute
         ) { value in
@@ -242,3 +242,4 @@ private extension RestrictionSetupBreakCardView {
             .first { $0 is UIViewController } as? UIViewController
     }
 }
+

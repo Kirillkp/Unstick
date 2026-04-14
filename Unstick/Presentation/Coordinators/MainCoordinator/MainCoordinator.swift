@@ -45,4 +45,10 @@ extension MainCoordinator: MainModuleDelegate {
         add(child: coordinator)
         coordinator.start()
     }
+
+    func showGroupDetails(groupId: UUID) {
+        _ = groupId
+        let module = moduleFactory.createGroupDetails(delegate: nil)
+        router.push(module)
+    }
 }

@@ -31,6 +31,7 @@ extension DS {
         /// indicator
         static let indicatorFillBorder = UIColor.hex("#B06CFF")
         static let indicatorStatusPositive = UIColor.hex("#B2EC51")
+        static let indicatorStatusSoftPositive = UIColor.hex("#E8FFBF")
 
         /// usage card
         static let usageCardProgressTrack = surfacePrimary

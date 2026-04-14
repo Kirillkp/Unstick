@@ -62,8 +62,8 @@ private extension RestrictionSetupFactory {
         )
     }
 
-    func makeGroupNameModel(_ input: GroupNameInput) -> RestrictionSetupGroupNameCardModel {
-        RestrictionSetupGroupNameCardModel(
+    func makeGroupNameModel(_ input: GroupNameInput) -> GroupNameCardModel {
+        GroupNameCardModel(
             id: IDs.groupName,
             title: L10n.RestrictionSetup.GroupName.title,
             value: input.value,
@@ -72,8 +72,8 @@ private extension RestrictionSetupFactory {
         )
     }
 
-    func makeDailyLimitModel(_ input: DailyLimitInput) -> RestrictionSetupDailyLimitCardModel {
-        RestrictionSetupDailyLimitCardModel(
+    func makeDailyLimitModel(_ input: DailyLimitInput) -> DailyLimitCardModel {
+        DailyLimitCardModel(
             id: IDs.dailyLimit,
             title: L10n.RestrictionSetup.DailyLimit.title,
             hours: input.hours,
@@ -86,8 +86,8 @@ private extension RestrictionSetupFactory {
         )
     }
 
-    func makeBreakSettingsModel(_ input: BreakSettingsInput) -> RestrictionSetupBreakCardModel {
-        RestrictionSetupBreakCardModel(
+    func makeBreakSettingsModel(_ input: BreakSettingsInput) -> BreakCardModel {
+        BreakCardModel(
             id: IDs.breakSettings,
             title: L10n.RestrictionSetup.Break.title,
             subtitle: L10n.RestrictionSetup.Break.subtitle,
@@ -105,8 +105,8 @@ private extension RestrictionSetupFactory {
         )
     }
 
-    func makeOnDemandModel(_ input: OnDemandInput) -> RestrictionSetupOnDemandCardModel {
-        RestrictionSetupOnDemandCardModel(
+    func makeOnDemandModel(_ input: OnDemandInput) -> OnDemandCardModel {
+        OnDemandCardModel(
             id: IDs.onDemand,
             title: L10n.RestrictionSetup.OnDemand.title,
             subtitle: L10n.RestrictionSetup.OnDemand.subtitle,

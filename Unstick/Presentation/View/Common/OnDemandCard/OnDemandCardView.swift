@@ -1,14 +1,14 @@
 //
-//  RestrictionSetupOnDemandCardView.swift
+//  OnDemandCardView.swift
 //  Unstick
 //
-//  Created by Codex on 11.04.2026.
+//  Created by Codex on 14.04.2026.
 //
 
 import UIKit
 import SnapKit
 
-final class RestrictionSetupOnDemandCardView: UIView {
+final class OnDemandCardView: UIView {
     private enum Layout {
         static let iconContainerSize = CGSize(width: 40, height: 40)
         static let iconSize = CGSize(width: 18, height: 18)
@@ -40,9 +40,9 @@ final class RestrictionSetupOnDemandCardView: UIView {
     }
 }
 
-extension RestrictionSetupOnDemandCardView: ConfigurableView {
+extension OnDemandCardView: ConfigurableView {
     func configure(with model: any BaseCellViewModel) {
-        guard let model = model as? RestrictionSetupOnDemandCardModel else { return }
+        guard let model = model as? OnDemandCardModel else { return }
 
         titleLabel.text = model.title
         subtitleLabel.text = model.subtitle
@@ -63,7 +63,7 @@ extension RestrictionSetupOnDemandCardView: ConfigurableView {
     }
 }
 
-private extension RestrictionSetupOnDemandCardView {
+private extension OnDemandCardView {
     func createUI() {
         setupSelf()
         setupCardView()
@@ -171,7 +171,7 @@ private extension RestrictionSetupOnDemandCardView {
         guard !minuteOptions.isEmpty else { return }
         guard let hostViewController else { return }
 
-        let controller = RestrictionSetupMinutesPopoverViewController(
+        let controller = MinutesPopoverViewController(
             options: minuteOptions,
             selectedValue: selectedMinute
         ) { [weak self] value in

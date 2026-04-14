@@ -1,13 +1,13 @@
 //
-//  RestrictionSetupDailyLimitCardModel.swift
+//  DailyLimitCardModel.swift
 //  Unstick
 //
-//  Created by Codex on 11.04.2026.
+//  Created by Codex on 14.04.2026.
 //
 
 import Foundation
 
-nonisolated struct RestrictionSetupDailyLimitCardModel: BaseCellViewModel, @unchecked Sendable {
+nonisolated struct DailyLimitCardModel: BaseCellViewModel, @unchecked Sendable {
     let id: UUID
     let title: String
     let hours: [Int]
@@ -41,12 +41,12 @@ nonisolated struct RestrictionSetupDailyLimitCardModel: BaseCellViewModel, @unch
     }
 
     var registration: CollectionReusableRegistration {
-        .cell(AnyCollectionCell<RestrictionSetupDailyLimitCardView>.self)
+        .cell(AnyCollectionCell<DailyLimitCardView>.self)
     }
 
     nonisolated static func == (
-        lhs: RestrictionSetupDailyLimitCardModel,
-        rhs: RestrictionSetupDailyLimitCardModel
+        lhs: DailyLimitCardModel,
+        rhs: DailyLimitCardModel
     ) -> Bool {
         lhs.id == rhs.id
             && lhs.title == rhs.title

@@ -1,13 +1,13 @@
 //
-//  RestrictionSetupGroupNameCardModel.swift
+//  GroupNameCardModel.swift
 //  Unstick
 //
-//  Created by Codex on 11.04.2026.
+//  Created by Codex on 14.04.2026.
 //
 
 import Foundation
 
-nonisolated struct RestrictionSetupGroupNameCardModel: BaseCellViewModel, @unchecked Sendable {
+nonisolated struct GroupNameCardModel: BaseCellViewModel, @unchecked Sendable {
     let id: UUID
     let title: String
     let value: String
@@ -29,12 +29,12 @@ nonisolated struct RestrictionSetupGroupNameCardModel: BaseCellViewModel, @unche
     }
 
     var registration: CollectionReusableRegistration {
-        .cell(AnyCollectionCell<RestrictionSetupGroupNameCardView>.self)
+        .cell(AnyCollectionCell<GroupNameCardView>.self)
     }
 
     nonisolated static func == (
-        lhs: RestrictionSetupGroupNameCardModel,
-        rhs: RestrictionSetupGroupNameCardModel
+        lhs: GroupNameCardModel,
+        rhs: GroupNameCardModel
     ) -> Bool {
         lhs.id == rhs.id
             && lhs.title == rhs.title
@@ -49,3 +49,4 @@ nonisolated struct RestrictionSetupGroupNameCardModel: BaseCellViewModel, @unche
         hasher.combine(placeholder)
     }
 }
+

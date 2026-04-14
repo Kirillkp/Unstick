@@ -1,19 +1,17 @@
 //
-//  RestrictionSetupGroupNameCardView.swift
+//  GroupNameCardView.swift
 //  Unstick
 //
-//  Created by Codex on 11.04.2026.
+//  Created by Codex on 14.04.2026.
 //
 
 import UIKit
 import SnapKit
 
-final class RestrictionSetupGroupNameCardView: UIView {
+final class GroupNameCardView: UIView {
     private enum Layout {
-        static let cardInset: CGFloat = DS.Spacing.x20
         static let iconContainerSize = CGSize(width: 40, height: 40)
         static let iconSize = CGSize(width: 18, height: 18)
-        static let valueContainerHeight: CGFloat = 72
     }
 
     private let cardView = UIView()
@@ -36,9 +34,9 @@ final class RestrictionSetupGroupNameCardView: UIView {
     }
 }
 
-extension RestrictionSetupGroupNameCardView: ConfigurableView {
+extension GroupNameCardView: ConfigurableView {
     func configure(with model: any BaseCellViewModel) {
-        guard let model = model as? RestrictionSetupGroupNameCardModel else { return }
+        guard let model = model as? GroupNameCardModel else { return }
 
         titleLabel.text = model.title
         if valueTextField.text != model.value {
@@ -55,7 +53,7 @@ extension RestrictionSetupGroupNameCardView: ConfigurableView {
     }
 }
 
-private extension RestrictionSetupGroupNameCardView {
+private extension GroupNameCardView {
     func createUI() {
         setupSelf()
         setupCardView()
@@ -85,7 +83,7 @@ private extension RestrictionSetupGroupNameCardView {
     func setupHeaderContainerView() {
         cardView.addSubview(headerContainerView)
         headerContainerView.snp.makeConstraints {
-            $0.top.horizontalEdges.equalToSuperview().inset(Layout.cardInset)
+            $0.top.horizontalEdges.equalToSuperview().inset(DS.Spacing.x20)
             $0.height.equalTo(Layout.iconContainerSize.height)
         }
     }
@@ -126,18 +124,17 @@ private extension RestrictionSetupGroupNameCardView {
         cardView.addSubview(valueContainerView)
         valueContainerView.snp.makeConstraints {
             $0.top.equalTo(headerContainerView.snp.bottom).offset(DS.Spacing.x16)
-            $0.horizontalEdges.bottom.equalToSuperview().inset(Layout.cardInset)
-            $0.height.equalTo(Layout.valueContainerHeight)
+            $0.horizontalEdges.bottom.equalToSuperview().inset(DS.Spacing.x20)
         }
         valueContainerView.backgroundColor = DS.Colors.neutral
-        valueContainerView.layer.cornerRadius = Layout.valueContainerHeight / 2
+        valueContainerView.layer.cornerRadius = DS.CornerRadius.x32
     }
 
     func setupValueTextField() {
         valueContainerView.addSubview(valueTextField)
         valueTextField.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(DS.Spacing.x24)
-            $0.centerY.equalToSuperview()
+            $0.verticalEdges.equalToSuperview().inset(DS.Spacing.x16)
+            $0.horizontalEdges.equalToSuperview().inset(DS.Spacing.x24)
         }
         valueTextField.textColor = DS.Colors.textSecondary
         valueTextField.font = DS.Font.medium(18)
@@ -155,9 +152,10 @@ private extension RestrictionSetupGroupNameCardView {
     }
 }
 
-extension RestrictionSetupGroupNameCardView: UITextFieldDelegate {
+extension GroupNameCardView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
 }
+

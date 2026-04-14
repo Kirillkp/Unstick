@@ -1,13 +1,13 @@
 //
-//  RestrictionSetupOnDemandCardModel.swift
+//  OnDemandCardModel.swift
 //  Unstick
 //
-//  Created by Codex on 11.04.2026.
+//  Created by Codex on 14.04.2026.
 //
 
 import Foundation
 
-nonisolated struct RestrictionSetupOnDemandCardModel: BaseCellViewModel, @unchecked Sendable {
+nonisolated struct OnDemandCardModel: BaseCellViewModel, @unchecked Sendable {
     let id: UUID
     let title: String
     let subtitle: String
@@ -44,12 +44,12 @@ nonisolated struct RestrictionSetupOnDemandCardModel: BaseCellViewModel, @unchec
     }
 
     var registration: CollectionReusableRegistration {
-        .cell(AnyCollectionCell<RestrictionSetupOnDemandCardView>.self)
+        .cell(AnyCollectionCell<OnDemandCardView>.self)
     }
 
     nonisolated static func == (
-        lhs: RestrictionSetupOnDemandCardModel,
-        rhs: RestrictionSetupOnDemandCardModel
+        lhs: OnDemandCardModel,
+        rhs: OnDemandCardModel
     ) -> Bool {
         lhs.id == rhs.id
             && lhs.title == rhs.title
@@ -72,3 +72,4 @@ nonisolated struct RestrictionSetupOnDemandCardModel: BaseCellViewModel, @unchec
         hasher.combine(isEnabled)
     }
 }
+
