@@ -14,6 +14,7 @@ final class GroupDetailsViewController: UIViewController {
     }
 
     var presenter: GroupDetailsPresenterProtocol?
+    private var sceneDidBecomeActiveObserver: NSObjectProtocol?
 
     private let collectionView = ContentSizedCollectionView(
         frame: .zero,
@@ -24,6 +25,7 @@ final class GroupDetailsViewController: UIViewController {
         super.viewDidLoad()
 
         createUI()
+        observeLifecycle()
         presenter?.viewLoaded()
     }
 
@@ -50,6 +52,10 @@ final class GroupDetailsViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         updateBottomInsets()
+    }
+
+    deinit {
+        removeLifecycleObserver()
     }
 }
 
@@ -96,6 +102,22 @@ private extension GroupDetailsViewController {
         let inset = Layout.bottomInset + view.safeAreaInsets.bottom
         collectionView.contentInset.bottom = inset
         collectionView.verticalScrollIndicatorInsets.bottom = inset
+    }
+
+    func observeLifecycle() {
+        sceneDidBecomeActiveObserver = NotificationCenter.default.addObserver(
+            forName: .sceneDidBecomeActive,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.presenter?.sceneDidBecomeActive()
+        }
+    }
+
+    func removeLifecycleObserver() {
+        guard let sceneDidBecomeActiveObserver else { return }
+        NotificationCenter.default.removeObserver(sceneDidBecomeActiveObserver)
+        self.sceneDidBecomeActiveObserver = nil
     }
 }
 

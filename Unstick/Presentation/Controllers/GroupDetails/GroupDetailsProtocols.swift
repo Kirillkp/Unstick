@@ -12,6 +12,7 @@ protocol GroupDetailsPresenterProtocol: AnyObject {
     func viewWillAppear(_ animated: Bool)
     func viewDidAppear(_ animated: Bool)
     func viewWillDisappear(_ animated: Bool)
+    func sceneDidBecomeActive()
 }
 
 protocol GroupDetailsFactoryProtocol: AnyObject {

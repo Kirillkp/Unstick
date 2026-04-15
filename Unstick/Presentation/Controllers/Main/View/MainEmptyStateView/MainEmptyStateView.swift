@@ -103,3 +103,11 @@ extension MainEmptyStateView {
         actionButton.setImage(nil, for: .normal)
     }
 }
+
+extension MainEmptyStateView: ConfigurableView {
+    func configure(with model: any BaseCellViewModel) {
+        guard let model = model as? MainEmptyStateModel else { return }
+        configure(model)
+        onDidTapActionButton = model.onTapAction
+    }
+}

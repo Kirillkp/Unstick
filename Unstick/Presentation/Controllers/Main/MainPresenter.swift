@@ -46,7 +46,6 @@ final class MainPresenter {
 extension MainPresenter: MainPresenterProtocol {
     func viewLoaded() {
         bindActions()
-        reloadMainState()
     }
 
     func viewWillAppear(_ animated: Bool) {
@@ -54,15 +53,17 @@ extension MainPresenter: MainPresenterProtocol {
     }
 
     func viewDidAppear(_ animated: Bool) {
-        if !hasAppliedInitialSnapshot {
-            dataSource.applySnapshot(animatingDifferences: false) { [weak self] in
-                self?.view?.refreshCollectionLayout()
-            }
-            hasAppliedInitialSnapshot = true
+        dataSource.applySnapshot(animatingDifferences: false) { [weak self] in
+            self?.view?.refreshCollectionLayout()
         }
+        hasAppliedInitialSnapshot = true
     }
 
     func viewWillDisappear(_ animated: Bool) {}
+
+    func sceneDidBecomeActive() {
+        reloadMainState()
+    }
 
     func nextAction() {
         switch primaryAction {
@@ -108,7 +109,6 @@ private extension MainPresenter {
 
     func renderNoAccessEmptyState() {
         primaryAction = .openSettings
-        dataSource.clearSections()
 
         let indicatorState = IndicatorView.State.empty(
             .init(
@@ -123,19 +123,17 @@ private extension MainPresenter {
             actionTitle: L10n.Main.NoAccess.actionTitle
         )
 
-        view?.display(state: .noAccess(
-            MainViewState.Empty(
-                indicatorState: indicatorState,
-                emptyView: emptyModel
-            )
-        ))
-        view?.setCollectionHidden(true)
+        let sections = factory.makeEmptyCollectionContent(
+            indicatorState: indicatorState,
+            emptyState: emptyModel
+        )
+        dataSource.setSections(with: sections)
+        view?.setCollectionHidden(false)
         applySnapshot(animatingDifferences: false)
     }
 
     func renderEmptyState() {
         primaryAction = .createGroup
-        dataSource.clearSections()
 
         let indicatorState = IndicatorView.State.empty(.init())
         let emptyModel = MainEmptyStateModel(
@@ -144,13 +142,12 @@ private extension MainPresenter {
             actionTitle: L10n.Main.Empty.actionTitle
         )
 
-        view?.display(state: .empty(
-            MainViewState.Empty(
-                indicatorState: indicatorState,
-                emptyView: emptyModel
-            )
-        ))
-        view?.setCollectionHidden(true)
+        let sections = factory.makeEmptyCollectionContent(
+            indicatorState: indicatorState,
+            emptyState: emptyModel
+        )
+        dataSource.setSections(with: sections)
+        view?.setCollectionHidden(false)
         applySnapshot(animatingDifferences: false)
     }
 
@@ -170,6 +167,7 @@ private extension MainPresenter {
         )
 
         let sections = factory.makeFilledCollectionContent(
+            indicatorState: state.indicatorState,
             items: models,
             sectionHeader: .init(
                 title: L10n.Main.Groups.title,
@@ -178,9 +176,7 @@ private extension MainPresenter {
             actionButtonTitle: state.actionTitle
         )
 
-        view?.display(state: .filled(state))
         view?.setCollectionHidden(false)
-
         dataSource.setSections(with: sections)
         applySnapshot(animatingDifferences: true)
     }

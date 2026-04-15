@@ -29,7 +29,7 @@ final class GroupDetailsFactory: GroupDetailsFactoryProtocol {
         let appsHeaderModel = makeSectionTitleModel(input.appsTitle)
         let appsListModel = makeAppsListModel(input.appRows)
         let updateActionModel = makeUpdateActionModel(input.updateAction)
-        let deleteActionModel = makeDeleteActionModel()
+        let deleteActionModel = makeDeleteActionModel(input.deleteAction)
 
         return [
             AnyCollectionSection(
@@ -114,7 +114,8 @@ private extension GroupDetailsFactory {
             title: status.title,
             subtitle: status.subtitle,
             actionTitle: status.actionTitle,
-            onTapAction: onDidTapStatusAction
+            isActionEnabled: status.isActionEnabled,
+            onTapAction: status.isActionEnabled ? onDidTapStatusAction : nil
         )
     }
 
@@ -221,10 +222,10 @@ private extension GroupDetailsFactory {
         )
     }
 
-    func makeDeleteActionModel() -> CollectionButtonRowModel {
+    func makeDeleteActionModel(_ input: GroupDetailsSectionInput.DeleteAction) -> CollectionButtonRowModel {
         CollectionButtonRowModel(
             id: IDs.deleteAction,
-            title: L10n.GroupDetails.Delete.actionTitle,
+            title: input.title,
             image: UIImage(systemName: "trash"),
             buttonStyle: .custom(
                 DS.ButtonConfiguration(
@@ -241,7 +242,8 @@ private extension GroupDetailsFactory {
                     semanticContentAttribute: .forceLeftToRight
                 )
             ),
-            onTap: onDidTapDeleteAction
+            isEnabled: input.isEnabled,
+            onTap: input.isEnabled ? onDidTapDeleteAction : nil
         )
     }
 

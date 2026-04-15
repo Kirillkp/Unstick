@@ -43,6 +43,8 @@ extension GroupDetailsStatusControlCardView: ConfigurableView {
         subtitleLabel.text = model.subtitle
         actionButton.setTitle(model.actionTitle, for: .normal)
         onTapAction = model.onTapAction
+        actionButton.isEnabled = model.isActionEnabled
+        actionButton.alpha = model.isActionEnabled ? 1 : 0.72
 
         statusDotView.backgroundColor = model.isActive
             ? DS.Colors.indicatorStatusSoftPositive

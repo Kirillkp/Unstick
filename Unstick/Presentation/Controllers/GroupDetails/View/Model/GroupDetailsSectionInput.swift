@@ -13,6 +13,7 @@ struct GroupDetailsSectionInput {
         let title: String
         let subtitle: String
         let actionTitle: String
+        let isActionEnabled: Bool
     }
 
     struct UsageSummary: Sendable {
@@ -61,6 +62,11 @@ struct GroupDetailsSectionInput {
         let isEnabled: Bool
     }
 
+    struct DeleteAction: Sendable {
+        let title: String
+        let isEnabled: Bool
+    }
+
     let statusControl: StatusControl
     let usageSummary: UsageSummary
     let groupName: String
@@ -71,4 +77,5 @@ struct GroupDetailsSectionInput {
     let appsTitle: String
     let appRows: [AppUsageRow]
     let updateAction: UpdateAction
+    let deleteAction: DeleteAction
 }

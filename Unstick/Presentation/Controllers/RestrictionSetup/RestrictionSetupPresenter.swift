@@ -41,6 +41,7 @@ final class RestrictionSetupPresenter {
     private var onDemandExtraMinutes = GroupCreationDefaults.settings.onDemandSettings.extraMinutes
     private let onDemandMinuteOptions = RestrictionSetupDefaults.onDemandMinuteOptions
     private var isContinueEnabled = true
+    private var isCreateGroupInFlight = false
 
     init(
         view: RestrictionSetupViewProtocol,
@@ -70,6 +71,10 @@ extension RestrictionSetupPresenter: RestrictionSetupPresenterProtocol {
     func viewWillDisappear(_ animated: Bool) {}
 
     func didTapContinue() {
+        guard !isCreateGroupInFlight else { return }
+        isCreateGroupInFlight = true
+        view?.setContinueEnabled(false)
+
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
@@ -80,7 +85,10 @@ extension RestrictionSetupPresenter: RestrictionSetupPresenterProtocol {
                     delegate?.didFinishRestrictionSetup()
                 }
             } catch {
-                // TODO: Show user-facing alert UI for create/apply failure.
+                isCreateGroupInFlight = false
+                AppErrorHandler.handle(error, context: "restriction_setup.create_group")
+                // TODO: Show user-facing alert UI via unified AppErrorHandler pipeline.
+                view?.setContinueEnabled(isContinueEnabled)
             }
         }
     }
@@ -118,7 +126,7 @@ private extension RestrictionSetupPresenter {
         animatingDifferences: Bool = true
     ) {
         let sections = factory.makeCollectionContent(input: makeSectionInput())
-        view?.setContinueEnabled(isContinueEnabled)
+        view?.setContinueEnabled(isContinueEnabled && !isCreateGroupInFlight)
 
         guard !isInitial else {
             pendingSections = sections

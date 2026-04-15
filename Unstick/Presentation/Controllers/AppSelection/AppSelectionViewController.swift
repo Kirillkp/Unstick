@@ -7,6 +7,8 @@
 
 import UIKit
 import SnapKit
+import FamilyControls
+import SwiftUI
 
 final class AppSelectionViewController: UIViewController {
     private enum Layout {}
@@ -18,6 +20,7 @@ final class AppSelectionViewController: UIViewController {
         collectionViewLayout: AppSelectionCollectionLayoutBuilder.makeLayout()
     )
     private let continueButton = DSButton()
+    private var onPickerSelectionUpdated: ((FamilyActivitySelection) -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +70,29 @@ extension AppSelectionViewController: AppSelectionViewProtocol {
         collectionView.layoutIfNeeded()
         view.layoutIfNeeded()
     }
+
+    func setSelectAppsActionEnabled(_ isEnabled: Bool) {
+        navigationItem.rightBarButtonItem?.isEnabled = isEnabled
+    }
+
+    func presentFamilyActivityPicker(
+        selection: FamilyActivitySelection,
+        onSelectionUpdated: @escaping (FamilyActivitySelection) -> Void
+    ) {
+        onPickerSelectionUpdated = onSelectionUpdated
+        let pickerView = AppSelectionFamilyPickerView(
+            initialSelection: selection,
+            onSelectionUpdated: { [weak self] updatedSelection in
+                self?.onPickerSelectionUpdated?(updatedSelection)
+            },
+            onClose: { [weak self] in
+                self?.dismiss(animated: true)
+            }
+        )
+        let hostingController = UIHostingController(rootView: pickerView)
+        hostingController.modalPresentationStyle = .formSheet
+        present(hostingController, animated: true)
+    }
 }
 
 private extension AppSelectionViewController {
@@ -79,6 +105,12 @@ private extension AppSelectionViewController {
     func setupSelf() {
         view.backgroundColor = DS.Colors.neutral
         title = ""
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: L10n.GroupInsight.Action.selectApps,
+            style: .plain,
+            target: self,
+            action: #selector(selectAppsButtonTapped)
+        )
     }
 
     func setupCollectionView() {
@@ -119,6 +151,11 @@ private extension AppSelectionViewController {
     func continueButtonTapped() {
         presenter?.didTapContinue()
     }
+
+    @objc
+    func selectAppsButtonTapped() {
+        presenter?.didTapSelectApps()
+    }
 }
 
 private extension AppSelectionViewController {
@@ -134,6 +171,43 @@ private extension AppSelectionViewController {
             view.snp.bottom
         } else {
             view.safeAreaLayoutGuide.snp.bottom
+        }
+    }
+}
+
+private struct AppSelectionFamilyPickerView: View {
+    @State private var selection: FamilyActivitySelection
+    @State private var didCommitSelection = false
+    private let onSelectionUpdated: (FamilyActivitySelection) -> Void
+    private let onClose: () -> Void
+
+    init(
+        initialSelection: FamilyActivitySelection,
+        onSelectionUpdated: @escaping (FamilyActivitySelection) -> Void,
+        onClose: @escaping () -> Void
+    ) {
+        _selection = State(initialValue: initialSelection)
+        self.onSelectionUpdated = onSelectionUpdated
+        self.onClose = onClose
+    }
+
+    var body: some View {
+        NavigationStack {
+            FamilyActivityPicker(selection: $selection)
+                .navigationTitle(L10n.GroupInsight.Action.selectApps)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Done") {
+                            didCommitSelection = true
+                            onSelectionUpdated(selection)
+                            onClose()
+                        }
+                    }
+                }
+                .onDisappear {
+                    guard !didCommitSelection else { return }
+                    onSelectionUpdated(selection)
+                }
         }
     }
 }

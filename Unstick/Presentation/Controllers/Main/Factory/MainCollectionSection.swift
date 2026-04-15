@@ -8,6 +8,8 @@
 import UIKit
 
 nonisolated enum MainCollectionSection: Int, CaseIterable, SectionIdentifiable {
+    case indicator
+    case emptyState
     case usageSummary
     case actionButton
 

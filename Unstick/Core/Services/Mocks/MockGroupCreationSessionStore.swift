@@ -9,7 +9,7 @@ import Foundation
 
 /// In-memory сессия создания группы, живущая в рамках AppServices.
 actor MockGroupCreationSessionStore: IGroupCreationSessionStore {
-    private var selectionPayload: GroupCreationSelectionPayload = .init(selectedAppIDs: [])
+    private var selectionPayload: GroupCreationSelectionPayload = .init(selectedAppIDs: [], summary: nil)
     private var currentSettings: RestrictionSettings
 
     init(defaultSettings: RestrictionSettings = GroupCreationDefaults.settings) {
@@ -17,7 +17,7 @@ actor MockGroupCreationSessionStore: IGroupCreationSessionStore {
     }
 
     func reset(defaultSettings: RestrictionSettings) async {
-        selectionPayload = .init(selectedAppIDs: [])
+        selectionPayload = .init(selectedAppIDs: [], summary: nil)
         currentSettings = defaultSettings
     }
 

@@ -35,6 +35,7 @@ final class RestrictionSetupUseCases: IRestrictionSetupUseCases {
     private let groupRepository: IRestrictionGroupRepository
     private let sessionStore: IGroupCreationSessionStore
     private let groupPolicyService: IGroupPolicyService
+    private let transactionGuard = CreateGroupTransactionGuard()
 
     init(
         authorizationService: IAuthorizationService,
@@ -59,33 +60,44 @@ final class RestrictionSetupUseCases: IRestrictionSetupUseCases {
     }
 
     func createGroup() async throws -> CreateGroupResult {
-        let authorizationStatus = await authorizationService.authorizationStatus()
-        guard authorizationStatus == .available else {
-            throw AccessError.authorizationMissing
-        }
-
-        let settings = await sessionStore.settings()
-        try validate(settings: settings)
-
-        let selectionPayload = await sessionStore.selection()
-        guard !selectionPayload.isEmpty else {
-            throw ValidationError.emptySelection
-        }
-        let selectionData = try JSONEncoder().encode(selectionPayload)
-
-        var group = RestrictionGroup(
-            selectionData: selectionData,
-            settings: settings,
-            status: .active
-        )
-        group.updatedAt = Date()
-        try await groupRepository.save(group)
-
+        try await transactionGuard.begin()
         do {
-            try await groupPolicyService.applyPolicy(group: group)
+            let authorizationStatus = await authorizationService.authorizationStatus()
+            guard authorizationStatus == .available else {
+                throw AccessError.authorizationMissing
+            }
+
+            let settings = await sessionStore.settings()
+            try validate(settings: settings)
+
+            let selectionPayload = await sessionStore.selection()
+            guard !selectionPayload.isEmpty else {
+                throw ValidationError.emptySelection
+            }
+            let selectionData = try JSONEncoder().encode(selectionPayload)
+
+            var group = RestrictionGroup(
+                selectionData: selectionData,
+                settings: settings,
+                status: .active
+            )
+            group.updatedAt = Date()
+            try await groupRepository.save(group)
+
+            do {
+                try await groupPolicyService.applyPolicy(group: group)
+            } catch {
+                // Rollback persisted group to avoid partially-created state
+                // when policy application fails.
+                try? await groupRepository.delete(id: group.id)
+                throw error
+            }
+
             await sessionStore.reset(defaultSettings: GroupCreationDefaults.settings)
+            await transactionGuard.end()
             return .createdActive(groupId: group.id)
         } catch {
+            await transactionGuard.end()
             throw error
         }
     }
@@ -100,5 +112,20 @@ final class RestrictionSetupUseCases: IRestrictionSetupUseCases {
         if settings.onDemandSettings.isEnabled && settings.onDemandSettings.extraMinutes <= 0 {
             throw ValidationError.invalidOnDemandExtraTime
         }
+    }
+}
+
+private actor CreateGroupTransactionGuard {
+    private var isInFlight = false
+
+    func begin() throws {
+        guard !isInFlight else {
+            throw PolicyApplyError.inconsistentGroup
+        }
+        isInFlight = true
+    }
+
+    func end() {
+        isInFlight = false
     }
 }

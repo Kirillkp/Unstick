@@ -9,6 +9,8 @@ import UIKit
 
 enum MainCollectionLayoutBuilder {
     private enum Layout {
+        static let indicatorEstimatedHeight: CGFloat = 256
+        static let emptyStateEstimatedHeight: CGFloat = 240
         static let itemEstimatedHeight: CGFloat = 136
         static let actionButtonEstimatedHeight: CGFloat = 64
         static let headerEstimatedHeight: CGFloat = 56
@@ -21,12 +23,58 @@ enum MainCollectionLayoutBuilder {
             }
 
             switch section {
+            case .indicator:
+                return makeIndicatorSection()
+            case .emptyState:
+                return makeEmptyStateSection()
             case .usageSummary:
                 return makeUsageSummarySection()
             case .actionButton:
                 return makeActionButtonSection()
             }
         }
+    }
+
+    private static func makeIndicatorSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .estimated(Layout.indicatorEstimatedHeight)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: itemSize,
+            subitems: [item]
+        )
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(
+            top: DS.Spacing.x48,
+            leading: 0,
+            bottom: DS.Spacing.x14,
+            trailing: 0
+        )
+        return section
+    }
+
+    private static func makeEmptyStateSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .estimated(Layout.emptyStateEstimatedHeight)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: itemSize,
+            subitems: [item]
+        )
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(
+            top: 0,
+            leading: 0,
+            bottom: DS.Spacing.x16,
+            trailing: 0
+        )
+        return section
     }
 
     private static func makeUsageSummarySection() -> NSCollectionLayoutSection {
@@ -48,7 +96,7 @@ enum MainCollectionLayoutBuilder {
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = DS.Spacing.x16
         section.contentInsets = NSDirectionalEdgeInsets(
-            top: 0,
+            top: DS.Spacing.x24,
             leading: DS.Spacing.x24,
             bottom: DS.Spacing.x16,
             trailing: DS.Spacing.x24

@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import FamilyControls
 
 /// Результат загрузки данных для экрана выбора приложений.
 enum LoadAppSelectionResult {
-    /// Экран готов к отображению с текущим selection из сессии.
+    /// Экран готов к отображению с текущим системным selection и его summary.
     case ready(
-        selection: GroupCreationSelectionPayload,
-        catalog: [AppSelectionCatalogCategory]
+        selection: FamilyActivitySelection,
+        summary: SelectionSummary
     )
 }
 
@@ -21,38 +22,52 @@ protocol IAppSelectionUseCases {
     /// Загружает текущее состояние выбора приложений/категорий.
     func loadAppSelection() async -> LoadAppSelectionResult
     /// Сохраняет обновленный выбор приложений/категорий.
-    func updateSelection(selection: GroupCreationSelectionPayload) async -> Bool
+    func updateSelection(selection: FamilyActivitySelection) async -> Bool
     /// Валидирует выбор перед переходом к RestrictionSetup.
-    func confirmSelection(selection: GroupCreationSelectionPayload) throws
+    func confirmSelection(selection: FamilyActivitySelection) throws
 }
 
 /// Реализация use cases экрана AppSelection.
 final class AppSelectionUseCases: IAppSelectionUseCases {
     private let sessionStore: IGroupCreationSessionStore
-    private let catalogService: IAppSelectionCatalogService
+    private let activitySelectionService: IActivitySelectionService
 
     init(
         sessionStore: IGroupCreationSessionStore,
-        catalogService: IAppSelectionCatalogService
+        activitySelectionService: IActivitySelectionService
     ) {
         self.sessionStore = sessionStore
-        self.catalogService = catalogService
+        self.activitySelectionService = activitySelectionService
     }
 
     func loadAppSelection() async -> LoadAppSelectionResult {
-        let selection = await sessionStore.selection()
-        let catalog = (try? await catalogService.fetchCatalog()) ?? []
-        return .ready(selection: selection, catalog: catalog)
+        let selection = (try? await activitySelectionService.currentSelection()) ?? .init()
+        let summary = activitySelectionService.selectionSummary(selection)
+        await persistSelectionSummary(summary)
+        return .ready(selection: selection, summary: summary)
     }
 
-    func updateSelection(selection: GroupCreationSelectionPayload) async -> Bool {
-        await sessionStore.updateSelection(selection)
-        return !selection.isEmpty
+    func updateSelection(selection: FamilyActivitySelection) async -> Bool {
+        try? await activitySelectionService.setSelection(selection)
+        let summary = activitySelectionService.selectionSummary(selection)
+        await persistSelectionSummary(summary)
+        return !summary.isEmpty
     }
 
-    func confirmSelection(selection: GroupCreationSelectionPayload) throws {
-        guard !selection.isEmpty else {
+    func confirmSelection(selection: FamilyActivitySelection) throws {
+        let summary = activitySelectionService.selectionSummary(selection)
+        guard !summary.isEmpty else {
             throw ValidationError.emptySelection
         }
+    }
+}
+
+private extension AppSelectionUseCases {
+    func persistSelectionSummary(_ summary: SelectionSummary) async {
+        let payload = GroupCreationSelectionPayload(
+            selectedAppIDs: [],
+            summary: summary
+        )
+        await sessionStore.updateSelection(payload)
     }
 }

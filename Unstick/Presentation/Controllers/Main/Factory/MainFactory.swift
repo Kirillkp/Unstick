@@ -11,7 +11,36 @@ import UIKit
 final class MainFactory: MainFactoryProtocol {
     var onDidTapActionButton: (() -> Void)?
 
+    func makeEmptyCollectionContent(
+        indicatorState: IndicatorView.State,
+        emptyState: MainEmptyStateModel
+    ) -> [AnyCollectionSection] {
+        [
+            AnyCollectionSection(
+                id: MainCollectionSection.indicator,
+                identifier: MainCollectionSection.indicator.sectionIdentifier,
+                items: [AnyCollectionItem(IndicatorModel(state: indicatorState))]
+            ),
+            AnyCollectionSection(
+                id: MainCollectionSection.emptyState,
+                identifier: MainCollectionSection.emptyState.sectionIdentifier,
+                items: [
+                    AnyCollectionItem(
+                        MainEmptyStateModel(
+                            id: emptyState.id,
+                            title: emptyState.title,
+                            subtitle: emptyState.subtitle,
+                            actionTitle: emptyState.actionTitle,
+                            onTapAction: onDidTapActionButton
+                        )
+                    )
+                ]
+            )
+        ]
+    }
+
     func makeFilledCollectionContent(
+        indicatorState: IndicatorView.State,
         items: [UsageSummaryCardModel],
         sectionHeader: MainGroupsSectionHeaderModel,
         actionButtonTitle: String
@@ -28,6 +57,16 @@ final class MainFactory: MainFactoryProtocol {
         ]
 
         return [
+            AnyCollectionSection(
+                id: MainCollectionSection.indicator,
+                identifier: MainCollectionSection.indicator.sectionIdentifier,
+                items: [AnyCollectionItem(IndicatorModel(state: indicatorState))]
+            ),
+            AnyCollectionSection(
+                id: MainCollectionSection.emptyState,
+                identifier: MainCollectionSection.emptyState.sectionIdentifier,
+                items: []
+            ),
             AnyCollectionSection(
                 id: MainCollectionSection.usageSummary,
                 identifier: MainCollectionSection.usageSummary.sectionIdentifier,

@@ -33,20 +33,39 @@ final class AppServices: AppServicing {
     let restrictionSetupUseCases: IRestrictionSetupUseCases
     /// Use cases экрана GroupDetails: загрузка и действия pause/resume/delete.
     let groupDetailsUseCases: IGroupDetailsUseCases
+    /// Apple-shaped сервис selection для дальнейшей интеграции с системным picker.
+    private let activitySelectionService: IActivitySelectionService
 
     init(userDefaultsService: UserDefaultsServicing = UserDefaultsService()) {
         self.userDefaultsService = userDefaultsService
 
-        let authorizationService = MockAuthorizationService(
-            statusProvider: {
-                userDefaultsService.isMockAuthorizationNotAvailable ? .notAvailable : .available
-            }
-        )
-        let groupRepository = MockRestrictionGroupRepository()
+        let authorizationService: IAuthorizationService
+        if userDefaultsService.isUseAppleAuthorizationService {
+            authorizationService = AppleAuthorizationService()
+        } else {
+            authorizationService = MockAuthorizationService(
+                statusProvider: {
+                    userDefaultsService.isMockAuthorizationNotAvailable ? .notAvailable : .available
+                }
+            )
+        }
+        let activitySelectionService: IActivitySelectionService
+        if userDefaultsService.isUseAppleActivitySelectionService {
+            activitySelectionService = AppleActivitySelectionService()
+        } else {
+            activitySelectionService = MockActivitySelectionService()
+        }
+        self.activitySelectionService = activitySelectionService
+        let groupRepository = LocalRestrictionGroupRepository(userDefaultsService: userDefaultsService)
         let groupCreationSessionStore = MockGroupCreationSessionStore()
         let appSelectionCatalogService = MockAppSelectionCatalogService()
         let usageInsightsService = MockUsageInsightsService()
-        let groupPolicyService = MockGroupPolicyService()
+        let groupPolicyService: IGroupPolicyService
+        if userDefaultsService.isUseAppleGroupPolicyService {
+            groupPolicyService = AppleGroupPolicyService(activitySelectionService: activitySelectionService)
+        } else {
+            groupPolicyService = MockGroupPolicyService()
+        }
 
         self.mainUseCases = MainUseCases(
             authorizationService: authorizationService,
@@ -59,7 +78,7 @@ final class AppServices: AppServicing {
         )
         self.appSelectionUseCases = AppSelectionUseCases(
             sessionStore: groupCreationSessionStore,
-            catalogService: appSelectionCatalogService
+            activitySelectionService: activitySelectionService
         )
         self.restrictionSetupUseCases = RestrictionSetupUseCases(
             authorizationService: authorizationService,

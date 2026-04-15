@@ -15,6 +15,7 @@ protocol MainPresenterProtocol: AnyObject {
     func viewWillAppear(_ animated: Bool)
     func viewDidAppear(_ animated: Bool)
     func viewWillDisappear(_ animated: Bool)
+    func sceneDidBecomeActive()
     func nextAction()
 }
 
@@ -23,7 +24,13 @@ protocol MainPresenterProtocol: AnyObject {
 protocol MainFactoryProtocol: AnyObject {
     var onDidTapActionButton: (() -> Void)? { get set }
 
+    func makeEmptyCollectionContent(
+        indicatorState: IndicatorView.State,
+        emptyState: MainEmptyStateModel
+    ) -> [AnyCollectionSection]
+
     func makeFilledCollectionContent(
+        indicatorState: IndicatorView.State,
         items: [UsageSummaryCardModel],
         sectionHeader: MainGroupsSectionHeaderModel,
         actionButtonTitle: String
@@ -35,7 +42,6 @@ protocol MainFactoryProtocol: AnyObject {
 protocol MainViewProtocol: AnyObject {
     var _collectionView: UICollectionView { get }
 
-    func display(state: MainViewState)
     func setCollectionHidden(_ isHidden: Bool)
     func refreshCollectionLayout()
 }

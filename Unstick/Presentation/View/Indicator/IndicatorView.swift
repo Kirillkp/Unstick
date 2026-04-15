@@ -46,6 +46,11 @@ final class IndicatorView: UIView {
     
     private enum Layout {
         static let ringSize: CGSize = CGSize(width: 224, height: 224)
+        static let contentSize: CGSize = CGSize(width: 256, height: 256)
+    }
+
+    override var intrinsicContentSize: CGSize {
+        Layout.contentSize
     }
 
     private let ringContainerView = UIView()
@@ -107,6 +112,13 @@ final class IndicatorView: UIView {
         filledTitleLabel.text = content.title
         filledValueLabel.text = content.value
         statusLabel.text = content.statusText
+    }
+}
+
+extension IndicatorView: ConfigurableView {
+    func configure(with model: any BaseCellViewModel) {
+        guard let model = model as? IndicatorModel else { return }
+        setState(model.state)
     }
 }
 

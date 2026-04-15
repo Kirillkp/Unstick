@@ -13,6 +13,7 @@ nonisolated struct GroupDetailsStatusControlCardModel: BaseCellViewModel, @unche
     let title: String
     let subtitle: String
     let actionTitle: String
+    let isActionEnabled: Bool
     let onTapAction: (() -> Void)?
 
     init(
@@ -21,6 +22,7 @@ nonisolated struct GroupDetailsStatusControlCardModel: BaseCellViewModel, @unche
         title: String,
         subtitle: String,
         actionTitle: String,
+        isActionEnabled: Bool = true,
         onTapAction: (() -> Void)? = nil
     ) {
         self.id = id
@@ -28,6 +30,7 @@ nonisolated struct GroupDetailsStatusControlCardModel: BaseCellViewModel, @unche
         self.title = title
         self.subtitle = subtitle
         self.actionTitle = actionTitle
+        self.isActionEnabled = isActionEnabled
         self.onTapAction = onTapAction
     }
 
@@ -44,6 +47,7 @@ nonisolated struct GroupDetailsStatusControlCardModel: BaseCellViewModel, @unche
             && lhs.title == rhs.title
             && lhs.subtitle == rhs.subtitle
             && lhs.actionTitle == rhs.actionTitle
+            && lhs.isActionEnabled == rhs.isActionEnabled
     }
 
     nonisolated func hash(into hasher: inout Hasher) {
@@ -52,6 +56,6 @@ nonisolated struct GroupDetailsStatusControlCardModel: BaseCellViewModel, @unche
         hasher.combine(title)
         hasher.combine(subtitle)
         hasher.combine(actionTitle)
+        hasher.combine(isActionEnabled)
     }
 }
-

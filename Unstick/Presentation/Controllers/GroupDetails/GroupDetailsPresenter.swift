@@ -13,6 +13,11 @@ protocol GroupDetailsModuleDelegate: AnyObject {
 }
 
 final class GroupDetailsPresenter {
+    private enum InFlightAction {
+        case statusToggle
+        case updateSettings
+        case deleteGroup
+    }
     private struct RestrictionFormState {
         var groupName: String
         var selectedHour: Int
@@ -54,6 +59,7 @@ final class GroupDetailsPresenter {
     private var group: RestrictionGroup?
     private var appRows: [GroupDetailsAppRow] = []
     private var formState: RestrictionFormState?
+    private var inFlightAction: InFlightAction?
 
     init(
         view: GroupDetailsViewProtocol,
@@ -77,13 +83,19 @@ extension GroupDetailsPresenter: GroupDetailsPresenterProtocol {
         reload()
     }
 
-    func viewWillAppear(_ animated: Bool) {}
+    func viewWillAppear(_ animated: Bool) {
+        reload()
+    }
 
     func viewDidAppear(_ animated: Bool) {
         applyInitialSnapshotIfNeeded()
     }
 
     func viewWillDisappear(_ animated: Bool) {}
+
+    func sceneDidBecomeActive() {
+        reload()
+    }
 }
 
 private extension GroupDetailsPresenter {
@@ -100,7 +112,10 @@ private extension GroupDetailsPresenter {
     }
 
     func didTapStatusAction() {
+        guard inFlightAction == nil else { return }
         guard let group else { return }
+        inFlightAction = .statusToggle
+        renderSections(animatingDifferences: true)
 
         Task { @MainActor [weak self] in
             guard let self else { return }
@@ -112,32 +127,47 @@ private extension GroupDetailsPresenter {
                 case .paused:
                     try await useCases.resumeGroup(groupId: group.id)
                 }
+                inFlightAction = nil
                 reload()
             } catch {
-                // TODO: Show user-facing alert UI for pause/resume failure.
+                inFlightAction = nil
+                AppErrorHandler.handle(error, context: "group_details.status_toggle")
+                // TODO: Show user-facing alert UI via unified AppErrorHandler pipeline.
+                renderSections(animatingDifferences: true)
             }
         }
     }
 
     func didTapDeleteAction() {
+        guard inFlightAction == nil else { return }
+        inFlightAction = .deleteGroup
+        renderSections(animatingDifferences: true)
+
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
                 try await useCases.deleteGroup(groupId: groupId)
+                inFlightAction = nil
                 delegate?.didFinishGroupDetails()
             } catch {
-                // TODO: Show user-facing alert UI for delete failure.
+                inFlightAction = nil
+                AppErrorHandler.handle(error, context: "group_details.delete")
+                // TODO: Show user-facing alert UI via unified AppErrorHandler pipeline.
+                renderSections(animatingDifferences: true)
             }
         }
     }
 
     func didTapUpdateAction() {
+        guard inFlightAction == nil else { return }
         guard
             let group,
             hasPendingChanges
         else {
             return
         }
+        inFlightAction = .updateSettings
+        renderSections(animatingDifferences: true)
 
         Task { @MainActor [weak self] in
             guard let self else { return }
@@ -146,9 +176,13 @@ private extension GroupDetailsPresenter {
                     groupId: group.id,
                     settings: makeDraftSettings()
                 )
+                inFlightAction = nil
                 reload()
             } catch {
-                // TODO: Show user-facing alert UI for group settings update failure.
+                inFlightAction = nil
+                AppErrorHandler.handle(error, context: "group_details.update_settings")
+                // TODO: Show user-facing alert UI via unified AppErrorHandler pipeline.
+                renderSections(animatingDifferences: true)
             }
         }
     }
@@ -166,6 +200,7 @@ private extension GroupDetailsPresenter {
                 self.appRows = appRows
                 formState = RestrictionFormState(settings: group.settings)
                 view?.setNavigationTitle(group.settings.groupName)
+                inFlightAction = nil
             }
 
             renderSections(animatingDifferences: isInitialSnapshotApplied)
@@ -192,7 +227,11 @@ private extension GroupDetailsPresenter {
         let usageSummary = makeUsageSummaryInput()
         let updateAction = GroupDetailsSectionInput.UpdateAction(
             title: L10n.GroupDetails.Update.actionTitle,
-            isEnabled: hasPendingChanges
+            isEnabled: hasPendingChanges && inFlightAction == nil
+        )
+        let deleteAction = GroupDetailsSectionInput.DeleteAction(
+            title: L10n.GroupDetails.Delete.actionTitle,
+            isEnabled: inFlightAction == nil
         )
 
         return GroupDetailsSectionInput(
@@ -258,17 +297,20 @@ private extension GroupDetailsPresenter {
             ),
             appsTitle: L10n.GroupDetails.Apps.title,
             appRows: makeAppUsageRows(),
-            updateAction: updateAction
+            updateAction: updateAction,
+            deleteAction: deleteAction
         )
     }
 
     func makeStatusControlInput() -> GroupDetailsSectionInput.StatusControl {
+        let isActionEnabled = inFlightAction == nil
         guard let group else {
             return .init(
                 isActive: false,
                 title: L10n.GroupDetails.Status.noDataTitle,
                 subtitle: L10n.GroupDetails.Status.noDataSubtitle,
-                actionTitle: L10n.GroupDetails.Status.noDataAction
+                actionTitle: L10n.GroupDetails.Status.noDataAction,
+                isActionEnabled: false
             )
         }
 
@@ -278,14 +320,16 @@ private extension GroupDetailsPresenter {
                 isActive: true,
                 title: L10n.GroupDetails.Status.activeTitle,
                 subtitle: L10n.GroupDetails.Status.activeSubtitle,
-                actionTitle: L10n.GroupDetails.Status.activeAction
+                actionTitle: L10n.GroupDetails.Status.activeAction,
+                isActionEnabled: isActionEnabled
             )
         case .paused:
             return .init(
                 isActive: false,
                 title: L10n.GroupDetails.Status.pausedTitle,
                 subtitle: L10n.GroupDetails.Status.pausedSubtitle,
-                actionTitle: L10n.GroupDetails.Status.pausedAction
+                actionTitle: L10n.GroupDetails.Status.pausedAction,
+                isActionEnabled: isActionEnabled
             )
         }
     }
@@ -345,6 +389,7 @@ private extension GroupDetailsPresenter {
         animatingDifferences: Bool,
         mutate: (inout RestrictionFormState) -> Void
     ) {
+        guard inFlightAction == nil else { return }
         guard var formState else { return }
         mutate(&formState)
         self.formState = formState

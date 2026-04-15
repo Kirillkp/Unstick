@@ -42,7 +42,7 @@ private extension MainGroupsSectionHeaderView {
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints {
             $0.leading.top.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(DS.Spacing.x24)
+            $0.bottom.equalToSuperview()
         }
         titleLabel.textColor = DS.Colors.textPrimary
         titleLabel.font = DS.Font.bold(24)
